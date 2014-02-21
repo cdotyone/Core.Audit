@@ -74,7 +74,9 @@
     <None Include="..\..\References\civic.snk">
       <Link>civic.snk</Link>
     </None>
-    <None Include="nuget\Civic.Core.Audit.nuspec" />
+    <None Include="nuget\Civic.Core.Audit.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="nuget\pack.bat" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -5,7 +5,7 @@ namespace Civic.Core.Audit
 {
     public class AuditLogger : IAuditLogger
     {
-        public string LogChange(string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, string before, string after)
+        public string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, string before, string after)
         {
 
             var log = new SystemEntityLog
@@ -18,7 +18,8 @@ namespace Civic.Core.Audit
                     Action = action,
                     Before = before,
                     After = after,
-                    Created = DateTime.UtcNow
+                    Created = DateTime.UtcNow,
+                    CreatedBy = who
                 };
 
             AuditData.AddSystemEntityLog(log);

@@ -15,47 +15,47 @@ namespace Civic.Core.Audit
             get { return _current ?? (_current = new AuditLogger()); }
         }
 
-        public static string LogModify<T>(string schema, string entityKeys, T from, T to)
+        public static string LogModify<T>(string who, string schema, string entityKeys, T from, T to)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, null, null, "MOD", from, to);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, null, null, "MOD", from, to);
         }
 
-        public static string LogRemove<T>(string schema, string entityKeys, T from)
+        public static string LogRemove<T>(string who, string schema, string entityKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, null, null, "DEL", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, null, null, "DEL", from, null);
         }
 
-        public static string LogAdd<T>(string schema, string entityKeys, T from)
+        public static string LogAdd<T>(string who, string schema, string entityKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, null, null, "ADD", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, null, null, "ADD", from, null);
         }
 
-        public static string LogAccess<T>(string schema, string entityKeys, T from)
+        public static string LogAccess<T>(string who, string schema, string entityKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, null, null, "ACC", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, null, null, "ACC", from, null);
         }
 
-        public static string LogModify<T>(string schema, string entityKeys, Type relatedType, string relatedKeys, T from, T to)
+        public static string LogModify<T>(string who, string schema, string entityKeys, Type relatedType, string relatedKeys, T from, T to)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "MOD", from, to);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "MOD", from, to);
         }
 
-        public static string LogRemove<T>(string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogRemove<T>(string who, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "DEL", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "DEL", from, null);
         }
 
-        public static string LogAdd<T>(string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogAdd<T>(string who, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", from, null);
         }
 
-        public static string LogAccess<T>(string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogAccess<T>(string who, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
+            return LogChange(who, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
         }
 
-        public static string LogChange(string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
+        public static string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Civic.Core.Audit
                     jsonAfter = JsonConvert.SerializeObject(dictAfter);
                 }
 
-                return logger.LogChange(schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, jsonBefore, jsonAfter);
+                return logger.LogChange(who, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, jsonBefore, jsonAfter);
             }
             catch (Exception ex)
             {
