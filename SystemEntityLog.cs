@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Civic.Core.Audit
 {
@@ -24,10 +25,10 @@ namespace Civic.Core.Audit
         public string Action { get; set; }
 
         [DataMember(Name = "before")]
-        public string Before { get; set; }
+        public Dictionary<string,string> Before { get; set; }
 
         [DataMember(Name = "after")]
-        public string After { get; set; }
+        public Dictionary<string, string> After { get; set; }
 
         [DataMember(Name = "success")]
         public bool Success { get; set; }

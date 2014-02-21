@@ -5,9 +5,8 @@ namespace Civic.Core.Audit
 {
     public class AuditLogger : IAuditLogger
     {
-        public string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, string before, string after)
+        public string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
         {
-
             var log = new SystemEntityLog
                 {
                     EntityCode = schema + "_" + entityCode,

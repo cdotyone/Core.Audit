@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Civic.Core.Data;
+using Newtonsoft.Json;
 
 namespace Civic.Core.Audit
 {
@@ -80,12 +81,12 @@ namespace Civic.Core.Audit
             command.AddInParameter("@entitykeys", systemEntityLog.EntityKeys);
             command.AddInParameter("@relatedentitycode", systemEntityLog.RelatedEntityCode);
             command.AddInParameter("@relatedentitykeys", systemEntityLog.RelatedEntityKeys);
-            command.AddInParameter("@action", systemEntityLog.Action);
-            command.AddInParameter("@before", systemEntityLog.Before);
-            command.AddInParameter("@after", systemEntityLog.After);
+            command.AddInParameter("@action", systemEntityLog.Action);                       
             command.AddInParameter("@success", systemEntityLog.Success);
             command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
 
+            if (systemEntityLog.Before == null || systemEntityLog.Before.Count == 0) command.AddInParameter("@before", null);
+            if (systemEntityLog.After == null || systemEntityLog.After.Count == 0) command.AddInParameter("@after", null);
         }
 
         private static bool populateSystemEntityLog(SystemEntityLog systemEntityLog, IDataReader dataReader)
@@ -98,11 +99,16 @@ namespace Civic.Core.Audit
             systemEntityLog.RelatedEntityCode = dataReader["RelatedEntityCode"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityCode"].ToString()) ? dataReader["RelatedEntityCode"].ToString() : string.Empty;
             systemEntityLog.RelatedEntityKeys = dataReader["RelatedEntityKeys"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityKeys"].ToString()) ? dataReader["RelatedEntityKeys"].ToString() : string.Empty;
             systemEntityLog.Action = dataReader["Action"] != null && !string.IsNullOrEmpty(dataReader["Action"].ToString()) ? dataReader["Action"].ToString() : string.Empty;
-            systemEntityLog.Before = dataReader["Before"] != null && !string.IsNullOrEmpty(dataReader["Before"].ToString()) ? dataReader["Before"].ToString() : string.Empty;
-            systemEntityLog.After = dataReader["After"] != null && !string.IsNullOrEmpty(dataReader["After"].ToString()) ? dataReader["After"].ToString() : string.Empty;
+            
+            string before = dataReader["Before"] != null && !string.IsNullOrEmpty(dataReader["Before"].ToString()) ? dataReader["Before"].ToString() : string.Empty;
+            string after = dataReader["After"] != null && !string.IsNullOrEmpty(dataReader["After"].ToString()) ? dataReader["After"].ToString() : string.Empty;
+            
             systemEntityLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && Boolean.Parse(dataReader["Success"].ToString());
             if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString());
-            systemEntityLog.EntityCode = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
+            systemEntityLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
+
+            if (!string.IsNullOrEmpty(before)) systemEntityLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
+            if (!string.IsNullOrEmpty(after)) systemEntityLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(after);
 
             return true;
         }

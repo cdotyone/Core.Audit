@@ -62,14 +62,16 @@ namespace Civic.Core.Audit
                 var logger = Current;
                 string jsonBefore = null;
                 string jsonAfter = null;
+                var dictBefore = new Dictionary<string, string>();
+                var dictAfter = new Dictionary<string, string>();
 
                 if(before!=null) jsonBefore = JsonConvert.SerializeObject(before);
                 if(after!=null) jsonAfter = JsonConvert.SerializeObject(after);
 
                 if (before != null && after != null)
                 {
-                    var dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
-                    var dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                    dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                    dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
 
                     var difference = new Dictionary<string, string>();
                     foreach (var kv in dictBefore)
@@ -86,12 +88,9 @@ namespace Civic.Core.Audit
                     dictAfter = difference;
 
                     dictBefore = dictAfter.Keys.ToDictionary(key => key, key => dictBefore[key]);
-
-                    jsonBefore = JsonConvert.SerializeObject(dictBefore);
-                    jsonAfter = JsonConvert.SerializeObject(dictAfter);
                 }
 
-                return logger.LogChange(who, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, jsonBefore, jsonAfter);
+                return logger.LogChange(who, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
             catch (Exception ex)
             {
