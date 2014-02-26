@@ -15,6 +15,7 @@ namespace Civic.Core.Audit
                     RelatedEntityKeys = relatedEntityKeys,
                     Success = false,
                     Action = action,
+                    ClientMachine = "Unknown",
                     Before = before,
                     After = after,
                     Created = DateTime.UtcNow,

@@ -38,6 +38,9 @@ namespace Civic.Core.Audit
 
         [DataMember(Name = "createdBy")]
         public string CreatedBy { get; set; }
+
+        [DataMember(Name = "clientMachine")]
+        public string ClientMachine { get; set; }
     }
 }
 
