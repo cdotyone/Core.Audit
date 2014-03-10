@@ -27,7 +27,7 @@ namespace Civic.Core.Audit
 
         public static string LogAdd<T>(string who, string clientMachine, string schema, string entityKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "ADD", from, null);
+            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "ADD", null, from);
         }
 
         public static string LogAccess<T>(string who, string clientMachine, string schema, string entityKeys, T from)
@@ -47,7 +47,7 @@ namespace Civic.Core.Audit
 
         public static string LogAdd<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", from, null);
+            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", null, from);
         }
 
         public static string LogAccess<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)

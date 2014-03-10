@@ -87,7 +87,9 @@ namespace Civic.Core.Audit
             command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
 
             if (systemEntityLog.Before == null || systemEntityLog.Before.Count == 0) command.AddInParameter("@before", null);
+            else command.AddInParameter("@before", JsonConvert.SerializeObject(systemEntityLog.Before));
             if (systemEntityLog.After == null || systemEntityLog.After.Count == 0) command.AddInParameter("@after", null);
+            else command.AddInParameter("@after", JsonConvert.SerializeObject(systemEntityLog.After));
         }
 
         private static bool populateSystemEntityLog(SystemEntityLog systemEntityLog, IDataReader dataReader)
