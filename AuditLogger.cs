@@ -5,7 +5,7 @@ namespace Civic.Core.Audit
 {
     public class AuditLogger : IAuditLogger
     {
-        public string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
+        public string LogChange(string who, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
         {
             var log = new SystemEntityLog
                 {
@@ -15,11 +15,11 @@ namespace Civic.Core.Audit
                     RelatedEntityKeys = relatedEntityKeys,
                     Success = false,
                     Action = action,
-                    ClientMachine = "Unknown",
+                    ClientMachine = clientMachine,
                     Before = before,
                     After = after,
                     Created = DateTime.UtcNow,
-                    CreatedBy = who
+                    CreatedBy = who,
                 };
 
             AuditData.AddSystemEntityLog(log);

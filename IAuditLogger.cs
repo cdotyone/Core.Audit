@@ -4,7 +4,7 @@ namespace Civic.Core.Audit
 {
     public interface IAuditLogger
     {
-        string LogChange(string who, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after);
+        string LogChange(string who, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after);
 
         void MarkSuccessFul(string id);
 
