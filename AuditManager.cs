@@ -89,6 +89,11 @@ namespace Civic.Core.Audit
 
                     dictBefore = dictAfter.Keys.ToDictionary(key => key, key => dictBefore[key]);
                 }
+                else
+                {
+                    if (before != null) dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                    if (after != null) dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                }
 
                 return logger.LogChange(who, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
