@@ -91,8 +91,28 @@ namespace Civic.Core.Audit
                 }
                 else
                 {
-                    if (before != null) dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
-                    if (after != null) dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                    if (before != null)
+                    {
+                        dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                        foreach (var key in dictBefore.Keys)
+                        {
+                            if (string.IsNullOrEmpty(dictBefore[key]))
+                            {
+                                dictBefore.Remove(key);
+                            }
+                        }
+                    }
+                    if (after != null)
+                    {
+                        dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                        foreach (var key in dictAfter.Keys)
+                        {
+                            if (string.IsNullOrEmpty(dictAfter[key]))
+                            {
+                                dictAfter.Remove(key);
+                            }
+                        }
+                    }
                 }
 
                 return logger.LogChange(who, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
