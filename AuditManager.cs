@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Civic.Core.Audit
 {
@@ -65,8 +66,16 @@ namespace Civic.Core.Audit
                 var dictBefore = new Dictionary<string, string>();
                 var dictAfter = new Dictionary<string, string>();
 
-                if(before!=null) jsonBefore = JsonConvert.SerializeObject(before);
-                if(after!=null) jsonAfter = JsonConvert.SerializeObject(after);
+                var settings = new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                        NullValueHandling = NullValueHandling.Ignore,
+                        DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                        DateFormatHandling = DateFormatHandling.IsoDateFormat
+                    };
+
+                if (before != null) jsonBefore = JsonConvert.SerializeObject(before, settings);
+                if (after != null) jsonAfter = JsonConvert.SerializeObject(after, settings);
 
                 if (before != null && after != null)
                 {
