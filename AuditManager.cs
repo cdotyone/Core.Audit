@@ -115,7 +115,11 @@ namespace Civic.Core.Audit
                 {
                     if (before != null)
                     {
-                        dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                        if (!(before is Dictionary<string, string>))
+                            dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                        else
+                            dictBefore = before as Dictionary<string, string>;
+
                         foreach (var key in dictBefore.Keys)
                         {
                             if (string.IsNullOrEmpty(dictBefore[key]))
@@ -126,7 +130,11 @@ namespace Civic.Core.Audit
                     }
                     if (after != null)
                     {
-                        dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                        if (!(after is Dictionary<string, string>))
+                            dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                        else
+                            dictAfter = after as Dictionary<string, string>;
+
                         foreach (var key in dictAfter.Keys)
                         {
                             if (string.IsNullOrEmpty(dictAfter[key]))
