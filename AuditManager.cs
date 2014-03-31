@@ -74,13 +74,26 @@ namespace Civic.Core.Audit
                         DateFormatHandling = DateFormatHandling.IsoDateFormat
                     };
 
-                if (before != null) jsonBefore = JsonConvert.SerializeObject(before, settings);
-                if (after != null) jsonAfter = JsonConvert.SerializeObject(after, settings);
+                if (before != null && !(before is Dictionary<string, string>))
+                {
+                    jsonBefore = JsonConvert.SerializeObject(before, settings);
+                }
+                if (after != null && !(after is Dictionary<string, string>))
+                {
+                    jsonAfter = JsonConvert.SerializeObject(after, settings);
+                }
 
                 if (before != null && after != null)
                 {
-                    dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
-                    dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                    if (!(before is Dictionary<string, string>))
+                        dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                    else
+                        dictBefore = before as Dictionary<string, string>;
+
+                    if (!(after is Dictionary<string, string>))
+                        dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                    else
+                        dictAfter = after as Dictionary<string, string>;
 
                     var difference = new Dictionary<string, string>();
                     foreach (var kv in dictBefore)
