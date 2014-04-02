@@ -120,13 +120,7 @@ namespace Civic.Core.Audit
                         else
                             dictBefore = before as Dictionary<string, string>;
 
-                        foreach (var key in dictBefore.Keys)
-                        {
-                            if (string.IsNullOrEmpty(dictBefore[key]))
-                            {
-                                dictBefore.Remove(key);
-                            }
-                        }
+                        dictBefore = (from kv in dictBefore where kv.Value != null select kv).ToDictionary(kv => kv.Key, kv => kv.Value);
                     }
                     if (after != null)
                     {
@@ -135,13 +129,7 @@ namespace Civic.Core.Audit
                         else
                             dictAfter = after as Dictionary<string, string>;
 
-                        foreach (var key in dictAfter.Keys)
-                        {
-                            if (string.IsNullOrEmpty(dictAfter[key]))
-                            {
-                                dictAfter.Remove(key);
-                            }
-                        }
+                        dictAfter = (from kv in dictAfter where kv.Value != null select kv).ToDictionary(kv => kv.Key, kv => kv.Value);
                     }
                 }
 
