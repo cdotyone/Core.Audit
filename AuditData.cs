@@ -14,7 +14,7 @@ namespace Civic.Core.Audit
             var systemEntityLogReturned = new SystemEntityLog();
 
             var database = DatabaseFactory.CreateDatabase("Civic");
-            using (var command = database.CreateStoredProcCommand("dbo", "usp_SystemEntityLogGet"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGet"))
             {
                 command.AddInParameter("@id", id);
 
@@ -36,7 +36,7 @@ namespace Civic.Core.Audit
             var list = new List<SystemEntityLog>();
 
             var database = DatabaseFactory.CreateDatabase("Civic");
-            using (var command = database.CreateStoredProcCommand("dbo", string.IsNullOrEmpty(filterBy) ? "usp_SystemEntityLogGetPaged" : "usp_SystemEntityLogGetFiltered"))
+            using (var command = database.CreateStoredProcCommand("civic", string.IsNullOrEmpty(filterBy) ? "usp_SystemEntityLogGetPaged" : "usp_SystemEntityLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -63,7 +63,7 @@ namespace Civic.Core.Audit
         public static int AddSystemEntityLog(SystemEntityLog systemEntityLog)
         {
             var database = DatabaseFactory.CreateDatabase("Civic");
-            using (var command = database.CreateStoredProcCommand("dbo", "usp_SystemEntityLogAdd"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogAdd"))
             {
                 buildSystemEntityLogCommandParameters(systemEntityLog, command, true);
                 command.ExecuteNonQuery();
@@ -120,7 +120,7 @@ namespace Civic.Core.Audit
         public static void MarkSystemEntityLogSuccessFul(IEnumerable<string> ids)
         {
             var database = DatabaseFactory.CreateDatabase("Civic");
-            using (var command = database.CreateStoredProcCommand("dbo", "usp_SystemEntityLogMarkSuccessful"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogMarkSuccessful"))
             {
                 command.AddInParameter("@ids", string.Join(",", ids));
                 command.ExecuteNonQuery();
