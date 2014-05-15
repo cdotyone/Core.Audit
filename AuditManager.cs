@@ -76,11 +76,11 @@ namespace Civic.Core.Audit
 
                 if (before != null && !(before is Dictionary<string, string>))
                 {
-                    jsonBefore = JsonConvert.SerializeObject(before, settings);
+                    jsonBefore = safeEncodeComplexProperties(JsonConvert.SerializeObject(before, settings));
                 }
                 if (after != null && !(after is Dictionary<string, string>))
                 {
-                    jsonAfter = JsonConvert.SerializeObject(after, settings);
+                    jsonAfter = safeEncodeComplexProperties(JsonConvert.SerializeObject(after, settings));
                 }
 
                 if (before != null && after != null)
@@ -142,6 +142,26 @@ namespace Civic.Core.Audit
             }
 
             return null;
+        }
+
+        private static string safeEncodeComplexProperties(string inp)
+        {
+            string result = inp.Trim(new[] {'{','}'});
+
+            int pos = 0,pos2;
+            while (pos < result.Length && result.Substring(pos).Contains("{"))
+            {
+                pos += result.IndexOf('{', pos);
+                pos2 = result.IndexOf('}', pos);
+
+                result = result.Substring(0, pos) +
+                         result.Substring(pos, pos2 - pos + 1).Replace("\"", "\\\"").Replace("{", "\"{").Replace("}", "}\"") +
+                         result.Substring(pos2 + 1);
+                           
+                pos = pos2;
+            }
+
+            return "{" + result + "}";
         }
 
         public static void MarkSuccessFul(string id)
