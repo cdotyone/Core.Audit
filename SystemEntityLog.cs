@@ -6,7 +6,7 @@ namespace Civic.Core.Audit
     [DataContract(Name = "systemEntityLog")]
     public partial class SystemEntityLog
     {
-        [DataMember(Name = "iD")]
+        [DataMember(Name = "id")]
         public int ID { get; set; }
 
         [DataMember(Name = "entityCode")]
