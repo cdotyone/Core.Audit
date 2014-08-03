@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using Civic.Core.Data;
 using Newtonsoft.Json;
 
@@ -9,11 +10,11 @@ namespace Civic.Core.Audit
     public class AuditData
     {
 
-        public static SystemEntityLog GetSystemEntityLog(Int32 id, string[] fillProperties = null)
+        public static SystemEntityLog GetSystemEntityLog(Int32 id, IDBConnection database)
         {
+            Debug.Assert(database != null);
             var systemEntityLogReturned = new SystemEntityLog();
 
-            var database = DatabaseFactory.CreateDatabase("Civic");
             using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGet"))
             {
                 command.AddInParameter("@id", id);
@@ -31,11 +32,11 @@ namespace Civic.Core.Audit
             return systemEntityLogReturned;
         }
 
-        public static List<SystemEntityLog> GetPagedSystemEntityLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, string[] fillProperties = null)
+        public static List<SystemEntityLog> GetPagedSystemEntityLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
+            Debug.Assert(database != null);
             var list = new List<SystemEntityLog>();
 
-            var database = DatabaseFactory.CreateDatabase("Civic");
             using (var command = database.CreateStoredProcCommand("civic", string.IsNullOrEmpty(filterBy) ? "usp_SystemEntityLogGetPaged" : "usp_SystemEntityLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
@@ -60,9 +61,9 @@ namespace Civic.Core.Audit
             return list;
         }
 
-        public static int AddSystemEntityLog(SystemEntityLog systemEntityLog)
+        public static int AddSystemEntityLog(SystemEntityLog systemEntityLog, IDBConnection database)
         {
-            var database = DatabaseFactory.CreateDatabase("Civic");
+            Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogAdd"))
             {
                 buildSystemEntityLogCommandParameters(systemEntityLog, command, true);
@@ -117,9 +118,9 @@ namespace Civic.Core.Audit
             return true;
         }
 
-        public static void MarkSystemEntityLogSuccessFul(IEnumerable<string> ids)
+        public static void MarkSystemEntityLogSuccessFul(IEnumerable<string> ids, IDBConnection database)
         {
-            var database = DatabaseFactory.CreateDatabase("Civic");
+            Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogMarkSuccessful"))
             {
                 command.AddInParameter("@ids", string.Join(",", ids));

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using Civic.Core.Data;
 
 namespace Civic.Core.Audit
 {
@@ -22,19 +24,28 @@ namespace Civic.Core.Audit
                     CreatedBy = who,
                 };
 
-            AuditData.AddSystemEntityLog(log);
+            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            {
+                AuditData.AddSystemEntityLog(log, database);
+            }
 
-            return log.ID.ToString();
+            return log.ID.ToString(CultureInfo.InvariantCulture);
         }
 
         public void MarkSuccessFul(string id)
         {
-            AuditData.MarkSystemEntityLogSuccessFul(new[] { id });
+            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            {
+                AuditData.MarkSystemEntityLogSuccessFul(new[] {id},database);
+            }
         }
 
         public void MarkSuccessFul(IEnumerable<string> ids)
         {
-            AuditData.MarkSystemEntityLogSuccessFul(ids);
+            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            {
+                AuditData.MarkSystemEntityLogSuccessFul(ids, database);
+            }
         }
     }
 }
