@@ -18,15 +18,14 @@ namespace Civic.Core.Audit
             using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGet"))
             {
                 command.AddInParameter("@id", id);
-
-                using (IDataReader dataReader = command.ExecuteReader())
-                {
-                    if (populateSystemEntityLog(systemEntityLogReturned, dataReader))
+                command.ExecuteReader(dataReader =>
                     {
-                        systemEntityLogReturned.ID = id;
-                    }
-                    else return null;
-                }
+                        if (populateSystemEntityLog(systemEntityLogReturned, dataReader))
+                        {
+                            systemEntityLogReturned.ID = id;
+                        }
+                        else systemEntityLogReturned = null;
+                    });
             }
 
             return systemEntityLogReturned;
@@ -37,7 +36,7 @@ namespace Civic.Core.Audit
             Debug.Assert(database != null);
             var list = new List<SystemEntityLog>();
 
-            using (var command = database.CreateStoredProcCommand("civic", string.IsNullOrEmpty(filterBy) ? "usp_SystemEntityLogGetPaged" : "usp_SystemEntityLogGetFiltered"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -45,7 +44,7 @@ namespace Civic.Core.Audit
                 command.AddInParameter("@orderBy", orderBy);
                 command.AddParameter("@count", ParameterDirection.InputOutput, count);
 
-                using (IDataReader dataReader = command.ExecuteReader())
+                command.ExecuteReader(dataReader =>
                 {
                     var item = new SystemEntityLog();
                     while (populateSystemEntityLog(item, dataReader))
@@ -53,7 +52,7 @@ namespace Civic.Core.Audit
                         list.Add(item);
                         item = new SystemEntityLog();
                     }
-                }
+                });
 
                 if (retCount) count = int.Parse(command.GetOutParameter("@count").Value.ToString());
             }
