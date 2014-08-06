@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Civic.Core.Audit
@@ -85,51 +86,64 @@ namespace Civic.Core.Audit
 
                 if (before != null && after != null)
                 {
+                    JObject jbefore, jafter;
+
                     if (!(before is Dictionary<string, string>))
-                        dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                        jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
                     else
-                        dictBefore = before as Dictionary<string, string>;
+                        jbefore = new JObject();
 
                     if (!(after is Dictionary<string, string>))
-                        dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                        jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
                     else
-                        dictAfter = after as Dictionary<string, string>;
+                        jafter = new JObject();
 
                     var difference = new Dictionary<string, string>();
-                    foreach (var kv in dictBefore)
+                    foreach (var kv in jbefore)
                     {
-                        string secondValue;
-                        if (dictAfter.TryGetValue(kv.Key, out secondValue))
+                        JToken secondValue;
+                        if (jafter.TryGetValue(kv.Key, out secondValue))
                         {
                             if (kv.Value != secondValue)
                             {
-                                difference.Add(kv.Key, secondValue);
+                                difference.Add(kv.Key, secondValue.ToString());
                             }
                         }
                     }
-                    dictAfter = difference;
 
-                    dictBefore = dictAfter.Keys.ToDictionary(key => key, key => dictBefore[key]);
+                    dictAfter = difference;
+                    dictBefore = difference.Keys.ToDictionary(key => key, key => jbefore[key].ToString());
                 }
                 else
                 {
                     if (before != null)
                     {
+                        JObject jbefore;
                         if (!(before is Dictionary<string, string>))
-                            dictBefore = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonBefore);
+                            jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
                         else
-                            dictBefore = before as Dictionary<string, string>;
+                            jbefore = new JObject();
 
-                        dictBefore = (from kv in dictBefore where kv.Value != null select kv).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+                        dictBefore = new Dictionary<string, string>();
+                        foreach (var kv in jbefore)
+                        {
+                            dictBefore.Add(kv.Key,kv.Value.ToString());
+                        } 
                     }
                     if (after != null)
                     {
+                        JObject jafter;
                         if (!(after is Dictionary<string, string>))
-                            dictAfter = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonAfter);
+                            jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
                         else
-                            dictAfter = after as Dictionary<string, string>;
+                            jafter = new JObject();
 
-                        dictAfter = (from kv in dictAfter where kv.Value != null select kv).ToDictionary(kv => kv.Key, kv => kv.Value);
+                        dictAfter = new Dictionary<string, string>();
+                        foreach (var kv in jafter)
+                        {
+                            dictAfter.Add(kv.Key, kv.Value.ToString());
+                        } 
                     }
                 }
 
