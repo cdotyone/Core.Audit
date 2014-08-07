@@ -57,6 +57,40 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
         }
 
+        public static bool HasChanged(object before, object after)
+        {
+            if ((before == null && after != null) || (before != null && after == null)) return true;
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            if (after == null && before == null) return false;
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
+            };
+
+            string jsonBefore = JsonConvert.SerializeObject(before, settings);
+            string jsonAfter = JsonConvert.SerializeObject(after, settings);
+
+            var jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
+            var jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
+
+            foreach (var kv in jbefore)
+            {
+                JToken secondValue;
+                if (!jafter.TryGetValue(kv.Key, out secondValue)) continue;
+                if (kv.Value.ToString() != secondValue.ToString())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string LogChange(string who, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
         {
             try
@@ -94,7 +128,7 @@ namespace Civic.Core.Audit
                     {
                         JToken secondValue;
                         if (!jafter.TryGetValue(kv.Key, out secondValue)) continue;
-                        if (kv.Value != secondValue)
+                        if (kv.Value.ToString() != secondValue.ToString())
                         {
                             difference.Add(kv.Key, secondValue.ToString());
                         }
