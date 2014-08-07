@@ -100,6 +100,7 @@ namespace Civic.Core.Audit
                 string jsonAfter = null;
                 var dictBefore = new Dictionary<string, string>();
                 var dictAfter = new Dictionary<string, string>();
+                var when = new DateTime?();
 
                 var settings = new JsonSerializerSettings
                     {
@@ -128,6 +129,15 @@ namespace Civic.Core.Audit
                     {
                         JToken secondValue;
                         if (!jafter.TryGetValue(kv.Key, out secondValue)) continue;
+
+                        var key = kv.Key.ToLowerInvariant();
+                        if (key == "modified" || (key=="created" && !when.HasValue))
+                        {
+                            DateTime tdate;
+                            if (DateTime.TryParse(secondValue.ToString(), out tdate))
+                                when = tdate;
+                        }
+
                         if (kv.Value.ToString() != secondValue.ToString())
                         {
                             difference.Add(kv.Key, secondValue.ToString());
@@ -146,6 +156,14 @@ namespace Civic.Core.Audit
                         foreach (var kv in jbefore)
                         {
                             dictBefore.Add(kv.Key,kv.Value.ToString());
+
+                            var key = kv.Key.ToLowerInvariant();
+                            if (key == "modified" || (key == "created" && !when.HasValue))
+                            {
+                                DateTime tdate;
+                                if (DateTime.TryParse(kv.Value.ToString(), out tdate))
+                                    when = tdate;
+                            }
                         } 
                     }
                     if (after != null)
@@ -156,11 +174,21 @@ namespace Civic.Core.Audit
                         foreach (var kv in jafter)
                         {
                             dictAfter.Add(kv.Key, kv.Value.ToString());
+
+                            var key = kv.Key.ToLowerInvariant();
+                            if (key == "modified" || (key == "created" && !when.HasValue))
+                            {
+                                DateTime tdate;
+                                if (DateTime.TryParse(kv.Value.ToString(), out tdate))
+                                    when = tdate;
+                            }
                         } 
                     }
                 }
 
-                return logger.LogChange(who, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
+                if (!when.HasValue) when = DateTime.UtcNow;
+
+                return logger.LogChange(who, when.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
             catch (Exception ex)
             {

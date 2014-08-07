@@ -82,7 +82,8 @@ namespace Civic.Core.Audit
             command.AddInParameter("@clientMachine", systemEntityLog.ClientMachine);
             command.AddInParameter("@relatedentitycode", systemEntityLog.RelatedEntityCode);
             command.AddInParameter("@relatedentitykeys", systemEntityLog.RelatedEntityKeys);
-            command.AddInParameter("@action", systemEntityLog.Action);                       
+            command.AddInParameter("@action", systemEntityLog.Action);
+            command.AddInParameter("@created", systemEntityLog.Created);                       
             command.AddInParameter("@success", systemEntityLog.Success ? "Y" : "N");
             command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
 
@@ -109,6 +110,7 @@ namespace Civic.Core.Audit
             
             systemEntityLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
             if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString());
+            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString());
             systemEntityLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
 
             if (!string.IsNullOrEmpty(before)) systemEntityLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);

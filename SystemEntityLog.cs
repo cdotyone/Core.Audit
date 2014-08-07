@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Civic.Core.Audit
 {
     [DataContract(Name = "systemEntityLog")]
-    public partial class SystemEntityLog
+    public class SystemEntityLog
     {
         [DataMember(Name = "id")]
         public int ID { get; set; }
@@ -35,6 +35,9 @@ namespace Civic.Core.Audit
 
         [DataMember(Name = "created")]
         public System.DateTime Created { get; set; }
+
+        [DataMember(Name = "recorded")]
+        public System.DateTime Recorded { get; set; }
 
         [DataMember(Name = "createdBy")]
         public string CreatedBy { get; set; }

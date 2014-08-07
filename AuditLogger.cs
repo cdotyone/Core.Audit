@@ -7,7 +7,7 @@ namespace Civic.Core.Audit
 {
     public class AuditLogger : IAuditLogger
     {
-        public string LogChange(string who, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
+        public string LogChange(string who, DateTime when, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
         {
             var log = new SystemEntityLog
                 {
@@ -20,8 +20,8 @@ namespace Civic.Core.Audit
                     ClientMachine = clientMachine,
                     Before = before,
                     After = after,
-                    Created = DateTime.UtcNow,
-                    CreatedBy = who,
+                    Created = when,
+                    CreatedBy = who
                 };
 
             using (var database = DatabaseFactory.CreateDatabase("Civic"))
