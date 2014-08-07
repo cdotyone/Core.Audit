@@ -81,7 +81,7 @@ namespace Civic.Core.Audit
             foreach (var kv in jbefore)
             {
                 JToken secondValue;
-                if (!jafter.TryGetValue(kv.Key, out secondValue)) continue;
+                if (kv.Key.ToLowerInvariant() == "modified" || !jafter.TryGetValue(kv.Key, out secondValue)) continue;
                 if (kv.Value.ToString() != secondValue.ToString())
                 {
                     return true;
