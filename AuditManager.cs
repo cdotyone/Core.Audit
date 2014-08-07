@@ -75,39 +75,28 @@ namespace Civic.Core.Audit
                         DateFormatHandling = DateFormatHandling.IsoDateFormat
                     };
 
-                if (before != null && !(before is Dictionary<string, string>))
+                if (before != null)
                 {
                     jsonBefore = JsonConvert.SerializeObject(before, settings);
                 }
-                if (after != null && !(after is Dictionary<string, string>))
+                if (after != null)
                 {
                     jsonAfter = JsonConvert.SerializeObject(after, settings);
                 }
 
                 if (before != null && after != null)
                 {
-                    JObject jbefore, jafter;
-
-                    if (!(before is Dictionary<string, string>))
-                        jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
-                    else
-                        jbefore = new JObject();
-
-                    if (!(after is Dictionary<string, string>))
-                        jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
-                    else
-                        jafter = new JObject();
+                    var jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
+                    var jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
 
                     var difference = new Dictionary<string, string>();
                     foreach (var kv in jbefore)
                     {
                         JToken secondValue;
-                        if (jafter.TryGetValue(kv.Key, out secondValue))
+                        if (!jafter.TryGetValue(kv.Key, out secondValue)) continue;
+                        if (kv.Value != secondValue)
                         {
-                            if (kv.Value != secondValue)
-                            {
-                                difference.Add(kv.Key, secondValue.ToString());
-                            }
+                            difference.Add(kv.Key, secondValue.ToString());
                         }
                     }
 
@@ -118,13 +107,7 @@ namespace Civic.Core.Audit
                 {
                     if (before != null)
                     {
-                        JObject jbefore;
-                        if (!(before is Dictionary<string, string>))
-                            jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
-                        else
-                            jbefore = new JObject();
-
-
+                        var jbefore = JsonConvert.DeserializeObject<JObject>(jsonBefore);
                         dictBefore = new Dictionary<string, string>();
                         foreach (var kv in jbefore)
                         {
@@ -133,11 +116,7 @@ namespace Civic.Core.Audit
                     }
                     if (after != null)
                     {
-                        JObject jafter;
-                        if (!(after is Dictionary<string, string>))
-                            jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
-                        else
-                            jafter = new JObject();
+                        var jafter = JsonConvert.DeserializeObject<JObject>(jsonAfter);
 
                         dictAfter = new Dictionary<string, string>();
                         foreach (var kv in jafter)
