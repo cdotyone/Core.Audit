@@ -86,6 +86,7 @@ namespace Civic.Core.Audit
             command.AddInParameter("@created", systemEntityLog.Created);                       
             command.AddInParameter("@success", systemEntityLog.Success ? "Y" : "N");
             command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
+            command.AddInParameter("@created", DateTime.UtcNow);
 
             if (systemEntityLog.Before == null || systemEntityLog.Before.Count == 0) command.AddInParameter("@before", null);
             else command.AddInParameter("@before", JsonConvert.SerializeObject(systemEntityLog.Before));
