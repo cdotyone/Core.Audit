@@ -186,7 +186,7 @@ namespace Civic.Core.Audit
                     }
                 }
 
-                if (!when.HasValue || when.Value == DateTime.MinValue || when.Value == DateTime.MaxValue) when = DateTime.UtcNow;
+                if (!when.HasValue || when.Value == DateTime.MinValue || when.Value == DateTime.MaxValue || (DateTime.UtcNow-when.Value).TotalSeconds>5) when = DateTime.UtcNow;
 
                 return logger.LogChange(who, when.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
