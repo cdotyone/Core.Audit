@@ -17,44 +17,44 @@ namespace Civic.Core.Audit
             get { return _current ?? (_current = new AuditLogger()); }
         }
 
-        public static string LogModify<T>(string who, string clientMachine, string schema, string entityKeys, T from, T to)
+        public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from, T to)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "MOD", from, to);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "MOD", from, to);
         }
 
-        public static string LogRemove<T>(string who, string clientMachine, string schema, string entityKeys, T from)
+        public static string LogRemove<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "DEL", from, null);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "DEL", from, null);
         }
 
-        public static string LogAdd<T>(string who, string clientMachine, string schema, string entityKeys, T from)
+        public static string LogAdd<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "ADD", null, from);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "ADD", null, from);
         }
 
-        public static string LogAccess<T>(string who, string clientMachine, string schema, string entityKeys, T from)
+        public static string LogAccess<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, null, null, "ACC", from, null);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "ACC", from, null);
         }
 
-        public static string LogModify<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from, T to)
+        public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from, T to)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "MOD", from, to);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "MOD", from, to);
         }
 
-        public static string LogRemove<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogRemove<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "DEL", from, null);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "DEL", from, null);
         }
 
-        public static string LogAdd<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogAdd<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", null, from);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ADD", null, from);
         }
 
-        public static string LogAccess<T>(string who, string clientMachine, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        public static string LogAccess<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
-            return LogChange(who, clientMachine, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
         }
 
         public static bool HasChanged(object before, object after)
@@ -91,7 +91,7 @@ namespace Civic.Core.Audit
             return false;
         }
 
-        public static string LogChange(string who, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
+        public static string LogChange(string who, string clientMachine, string module, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace Civic.Core.Audit
 
                 if (!when.HasValue || when.Value == DateTime.MinValue || when.Value == DateTime.MaxValue || (DateTime.UtcNow-when.Value).TotalSeconds>5) when = DateTime.UtcNow;
 
-                return logger.LogChange(who, when.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
+                return logger.LogChange(who, when.Value, clientMachine, module, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
             catch (Exception ex)
             {
@@ -199,12 +199,12 @@ namespace Civic.Core.Audit
             return null;
         }
 
-        public static void MarkSuccessFul(string id)
+        public static void MarkSuccessFul(string module, string id)
         {
             try
             {
                 var logger = Current;
-                logger.MarkSuccessFul(id);
+                logger.MarkSuccessFul(module, id);
             }
             catch (Exception ex)
             {
@@ -213,12 +213,12 @@ namespace Civic.Core.Audit
             }
         }
 
-        public static void MarkSuccessFul(IEnumerable<string> ids)
+        public static void MarkSuccessFul(string module, IEnumerable<string> ids)
         {
             try
             {
                 var logger = Current;
-                logger.MarkSuccessFul(ids);
+                logger.MarkSuccessFul(module, ids);
             }
             catch (Exception ex)
             {

@@ -7,7 +7,7 @@ namespace Civic.Core.Audit
 {
     public class AuditLogger : IAuditLogger
     {
-        public string LogChange(string who, DateTime when, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
+        public string LogChange(string who, DateTime when, string clientMachine, string module, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
         {
             var log = new SystemEntityLog
                 {
@@ -24,7 +24,7 @@ namespace Civic.Core.Audit
                     CreatedBy = who
                 };
 
-            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            using (var database = DatabaseFactory.CreateDatabase(module))
             {
                 AuditData.AddSystemEntityLog(log, database);
             }
@@ -32,17 +32,17 @@ namespace Civic.Core.Audit
             return log.ID.ToString(CultureInfo.InvariantCulture);
         }
 
-        public void MarkSuccessFul(string id)
+        public void MarkSuccessFul(string module, string id)
         {
-            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            using (var database = DatabaseFactory.CreateDatabase(module))
             {
                 AuditData.MarkSystemEntityLogSuccessFul(new[] {id},database);
             }
         }
 
-        public void MarkSuccessFul(IEnumerable<string> ids)
+        public void MarkSuccessFul(string module, IEnumerable<string> ids)
         {
-            using (var database = DatabaseFactory.CreateDatabase("Civic"))
+            using (var database = DatabaseFactory.CreateDatabase(module))
             {
                 AuditData.MarkSystemEntityLogSuccessFul(ids, database);
             }
