@@ -83,10 +83,10 @@ namespace Civic.Core.Audit
             command.AddInParameter("@relatedentitycode", systemEntityLog.RelatedEntityCode);
             command.AddInParameter("@relatedentitykeys", systemEntityLog.RelatedEntityKeys);
             command.AddInParameter("@action", systemEntityLog.Action);
-            command.AddInParameter("@created", systemEntityLog.Created);                       
+            if(systemEntityLog.Created.HasValue) command.AddInParameter("@created", systemEntityLog.Created);   
+            else command.AddInParameter("@created", AuditConfig.Current.UseLocalTime ? DateTime.Now : DateTime.UtcNow);
             command.AddInParameter("@success", systemEntityLog.Success ? "Y" : "N");
             command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
-            command.AddInParameter("@created", DateTime.UtcNow);
 
             if (systemEntityLog.Before == null || systemEntityLog.Before.Count == 0) command.AddInParameter("@before", null);
             else command.AddInParameter("@before", JsonConvert.SerializeObject(systemEntityLog.Before));

@@ -53,6 +53,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +69,7 @@
     <Compile Include="AuditLogger.cs" />
     <Compile Include="AuditManager.cs" />
     <Compile Include="AuditData.cs" />
+    <Compile Include="AuditConfig.cs" />
     <Compile Include="SystemEntityLog.cs" />
     <Compile Include="IAuditLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +85,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Civic.Core.Configuration\Civic.Core.Configuration.csproj">
+      <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
+      <Name>Civic.Core.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Civic.Core.Data\Civic.Core.Data.csproj">
       <Project>{3447d6a0-56b4-4e6b-a2db-f425324f614a}</Project>
       <Name>Civic.Core.Data</Name>

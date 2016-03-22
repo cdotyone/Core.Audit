@@ -34,7 +34,7 @@ namespace Civic.Core.Audit
         public bool Success { get; set; }
 
         [DataMember(Name = "created")]
-        public System.DateTime Created { get; set; }
+        public System.DateTime? Created { get; set; }
 
         [DataMember(Name = "recorded")]
         public System.DateTime Recorded { get; set; }
