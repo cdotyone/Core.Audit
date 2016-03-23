@@ -188,6 +188,8 @@ namespace Civic.Core.Audit
 
                 if (!when.HasValue || when.Value == DateTime.MinValue || when.Value == DateTime.MaxValue || (DateTime.UtcNow-when.Value).TotalSeconds>5) when = DateTime.UtcNow;
 
+                if (when.HasValue && when.Value.Kind == DateTimeKind.Utc && AuditConfig.Current.UseLocalTime)
+                    when = when.Value.ToLocalTime();
                 return logger.LogChange(who, when.Value, clientMachine, module, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
             }
             catch (Exception ex)
