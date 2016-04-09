@@ -13,8 +13,9 @@ namespace Civic.Core.Audit
             Attributes = element.Attributes;
             Name = element.Name;
         }
+
         /// <summary>
-        /// The current configuration for the configuration library
+        /// The current configuration for the audit library
         /// </summary>
         public static AuditConfig Current
         {
