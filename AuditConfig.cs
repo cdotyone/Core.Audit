@@ -5,6 +5,9 @@ namespace Civic.Core.Audit
     public class AuditConfig : NamedConfigurationElement
     {
         protected const string USE_LOCAL_TIME = "useLocalTime";
+        private static CivicSection _coreConfig;
+        private static AuditConfig _current;
+        private bool _useLocalTime;
 
         public AuditConfig(INamedElement element)
         {
@@ -12,6 +15,8 @@ namespace Civic.Core.Audit
             Children = element.Children;
             Attributes = element.Attributes;
             Name = element.Name;
+
+            _useLocalTime = !Attributes.ContainsKey(USE_LOCAL_TIME) || bool.Parse(Attributes[USE_LOCAL_TIME]);
         }
 
         /// <summary>
@@ -21,15 +26,13 @@ namespace Civic.Core.Audit
         {
             get
             {
+                if (_current != null) return _current;
+
                 if (_coreConfig == null) _coreConfig = CivicSection.Current;
                 _current = new AuditConfig(_coreConfig.Children.ContainsKey(SectionName) ? _coreConfig.Children[SectionName] : null);
                 return _current;
             }
         }
-
-        private static CivicSection _coreConfig;
-        private static AuditConfig _current;
-
 
         /// <summary>
         /// The name of the configuration section.
@@ -41,14 +44,8 @@ namespace Civic.Core.Audit
 
         public bool UseLocalTime
         {
-            get
-            {
-                return !Attributes.ContainsKey(USE_LOCAL_TIME) || bool.Parse(Attributes[USE_LOCAL_TIME]);
-            }
-            set
-            {
-                Attributes[USE_LOCAL_TIME] = value.ToString();
-            }
+            get { return _useLocalTime; }
+            set { _useLocalTime = value; Attributes[USE_LOCAL_TIME] = value.ToString(); }
         }
     }
 }
