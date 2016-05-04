@@ -57,6 +57,28 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
         }
 
+
+        public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, T to)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "MOD", from, to);
+        }
+
+        public static string LogRemove<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "DEL", from, null);
+        }
+
+        public static string LogAdd<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ADD", null, from);
+        }
+
+        public static string LogAccess<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ACC", from, null);
+        }
+
+
         public static bool HasChanged(object before, object after)
         {
             if ((before == null && after != null) || (before != null && after == null)) return true;
