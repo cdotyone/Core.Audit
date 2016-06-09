@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using Civic.Core.Data;
 using Newtonsoft.Json;
 
@@ -108,10 +109,11 @@ namespace Civic.Core.Audit
             
             string before = dataReader["Before"] != null && !string.IsNullOrEmpty(dataReader["Before"].ToString()) ? dataReader["Before"].ToString() : string.Empty;
             string after = dataReader["After"] != null && !string.IsNullOrEmpty(dataReader["After"].ToString()) ? dataReader["After"].ToString() : string.Empty;
-            
+
+            var format = new CultureInfo("en-US").DateTimeFormat;
             systemEntityLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
-            if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString());
-            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString());
+            if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeUniversal);
+            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeUniversal);
             systemEntityLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
 
             if (!string.IsNullOrEmpty(before)) systemEntityLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
