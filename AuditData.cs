@@ -112,8 +112,8 @@ namespace Civic.Core.Audit
 
             var format = new CultureInfo("en-US").DateTimeFormat;
             systemEntityLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
-            if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeUniversal);
-            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeUniversal);
+            if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeLocal);
+            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeLocal);
             systemEntityLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
 
             if (!string.IsNullOrEmpty(before)) systemEntityLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
