@@ -131,6 +131,17 @@ namespace Civic.Core.Audit
                 command.ExecuteNonQuery();
             }
         }
+
+        public static void MarkSystemEntityLogSuccessFul(string id, string enityKey, IDBConnection database)
+        {
+            Debug.Assert(database != null);
+            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogMarkSuccessfulAdd"))
+            {
+                command.AddInParameter("@id", id);
+                command.AddInParameter("@enityKey", enityKey);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }
 

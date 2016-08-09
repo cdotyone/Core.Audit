@@ -223,12 +223,12 @@ namespace Civic.Core.Audit
             return null;
         }
 
-        public static void MarkSuccessFul(string module, string id)
+        public static void MarkSuccessFul(string module, string id, string enityKey)
         {
             try
             {
                 var logger = Current;
-                logger.MarkSuccessFul(module, id);
+                logger.MarkSuccessFul(module, id, enityKey);
             }
             catch (Exception ex)
             {
