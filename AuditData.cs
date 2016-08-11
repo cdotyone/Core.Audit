@@ -16,7 +16,7 @@ namespace Civic.Core.Audit
             Debug.Assert(database != null);
             var systemEntityLogReturned = new SystemEntityLog();
 
-            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGet"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
             {
                 command.AddInParameter("@id", id);
                 command.ExecuteReader(dataReader =>
@@ -37,7 +37,7 @@ namespace Civic.Core.Audit
             Debug.Assert(database != null);
             var list = new List<SystemEntityLog>();
 
-            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogGetFiltered"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -64,7 +64,7 @@ namespace Civic.Core.Audit
         public static int AddSystemEntityLog(SystemEntityLog systemEntityLog, IDBConnection database)
         {
             Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogAdd"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogAdd"))
             {
                 buildSystemEntityLogCommandParameters(systemEntityLog, command, true);
                 command.ExecuteNonQuery();
@@ -125,7 +125,7 @@ namespace Civic.Core.Audit
         public static void MarkSystemEntityLogSuccessFul(IEnumerable<string> ids, IDBConnection database)
         {
             Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogMarkSuccessful"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessful"))
             {
                 command.AddInParameter("@ids", string.Join(",", ids));
                 command.ExecuteNonQuery();
@@ -135,7 +135,7 @@ namespace Civic.Core.Audit
         public static void MarkSystemEntityLogSuccessFul(string id, string enityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_SystemEntityLogMarkSuccessfulAdd"))
+            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
             {
                 command.AddInParameter("@id", id);
                 command.AddInParameter("@enityKey", enityKey);
