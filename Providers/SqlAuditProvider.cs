@@ -36,7 +36,7 @@ namespace Civic.Core.Audit.Providers
 
             using (var database = DatabaseFactory.CreateDatabase(module))
             {
-                AuditData.AddAuditAuditLog(log, database, config.UseLocalTime);
+                AuditData.AddAuditLog(log, database, config.UseLocalTime);
             }
 
             return log.ID.ToString(CultureInfo.InvariantCulture);
@@ -46,7 +46,7 @@ namespace Civic.Core.Audit.Providers
         {
             using (var database = DatabaseFactory.CreateDatabase(module))
             {
-                AuditData.MarkAuditAuditLogSuccessFul(trackingID, enityKey, database);
+                AuditData.MarkAuditLogSuccessFul(trackingID, enityKey, database);
             }
         }
     }

@@ -11,28 +11,28 @@ namespace Civic.Core.Audit
     public class AuditData
     {
 
-        public static AuditLog GetAuditAuditLog(Int32 id, IDBConnection database)
+        public static AuditLog GetAuditLog(Int32 id, IDBConnection database)
         {
             Debug.Assert(database != null);
-            var AuditAuditLogReturned = new AuditLog();
+            var AuditLogReturned = new AuditLog();
 
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
             {
                 command.AddInParameter("@id", id);
                 command.ExecuteReader(dataReader =>
                     {
-                        if (populateAuditAuditLog(AuditAuditLogReturned, dataReader))
+                        if (populateAuditLog(AuditLogReturned, dataReader))
                         {
-                            AuditAuditLogReturned.ID = id;
+                            AuditLogReturned.ID = id;
                         }
-                        else AuditAuditLogReturned = null;
+                        else AuditLogReturned = null;
                     });
             }
 
-            return AuditAuditLogReturned;
+            return AuditLogReturned;
         }
 
-        public static List<AuditLog> GetPagedAuditAuditLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
+        public static List<AuditLog> GetPagedAuditLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
             Debug.Assert(database != null);
             var list = new List<AuditLog>();
@@ -48,7 +48,7 @@ namespace Civic.Core.Audit
                 command.ExecuteReader(dataReader =>
                 {
                     var item = new AuditLog();
-                    while (populateAuditAuditLog(item, dataReader))
+                    while (populateAuditLog(item, dataReader))
                     {
                         list.Add(item);
                         item = new AuditLog();
@@ -61,12 +61,12 @@ namespace Civic.Core.Audit
             return list;
         }
 
-        public static int AddAuditAuditLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
+        public static int AddAuditLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogAdd"))
             {
-                buildAuditAuditLogCommandParameters(auditLog, command, useLocalTime, true);
+                buildAuditLogCommandParameters(auditLog, command, useLocalTime, true);
                 command.ExecuteNonQuery();
                 return
                auditLog.ID = Int32.Parse(
@@ -74,7 +74,7 @@ namespace Civic.Core.Audit
             }
         }
 
-        private static void buildAuditAuditLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
+        private static void buildAuditLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, auditLog.ID);
             else command.AddInParameter("@id", auditLog.ID);
@@ -96,7 +96,7 @@ namespace Civic.Core.Audit
             else command.AddInParameter("@after", JsonConvert.SerializeObject(auditLog.After));
         }
 
-        private static bool populateAuditAuditLog(AuditLog auditLog, IDataReader dataReader)
+        private static bool populateAuditLog(AuditLog auditLog, IDataReader dataReader)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
@@ -124,7 +124,7 @@ namespace Civic.Core.Audit
             return true;
         }
 
-        public static void MarkAuditAuditLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
+        public static void MarkAuditLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
