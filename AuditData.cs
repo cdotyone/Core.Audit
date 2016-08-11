@@ -11,28 +11,28 @@ namespace Civic.Core.Audit
     public class AuditData
     {
 
-        public static AuditLog GetSystemEntityLog(Int32 id, IDBConnection database)
+        public static AuditLog GetAuditAuditLog(Int32 id, IDBConnection database)
         {
             Debug.Assert(database != null);
-            var systemEntityLogReturned = new AuditLog();
+            var AuditAuditLogReturned = new AuditLog();
 
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
             {
                 command.AddInParameter("@id", id);
                 command.ExecuteReader(dataReader =>
                     {
-                        if (populateSystemEntityLog(systemEntityLogReturned, dataReader))
+                        if (populateAuditAuditLog(AuditAuditLogReturned, dataReader))
                         {
-                            systemEntityLogReturned.ID = id;
+                            AuditAuditLogReturned.ID = id;
                         }
-                        else systemEntityLogReturned = null;
+                        else AuditAuditLogReturned = null;
                     });
             }
 
-            return systemEntityLogReturned;
+            return AuditAuditLogReturned;
         }
 
-        public static List<AuditLog> GetPagedSystemEntityLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
+        public static List<AuditLog> GetPagedAuditAuditLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
             Debug.Assert(database != null);
             var list = new List<AuditLog>();
@@ -48,7 +48,7 @@ namespace Civic.Core.Audit
                 command.ExecuteReader(dataReader =>
                 {
                     var item = new AuditLog();
-                    while (populateSystemEntityLog(item, dataReader))
+                    while (populateAuditAuditLog(item, dataReader))
                     {
                         list.Add(item);
                         item = new AuditLog();
@@ -61,12 +61,12 @@ namespace Civic.Core.Audit
             return list;
         }
 
-        public static int AddSystemEntityLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
+        public static int AddAuditAuditLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogAdd"))
             {
-                buildSystemEntityLogCommandParameters(auditLog, command, useLocalTime, true);
+                buildAuditAuditLogCommandParameters(auditLog, command, useLocalTime, true);
                 command.ExecuteNonQuery();
                 return
                auditLog.ID = Int32.Parse(
@@ -74,7 +74,7 @@ namespace Civic.Core.Audit
             }
         }
 
-        private static void buildSystemEntityLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
+        private static void buildAuditAuditLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, auditLog.ID);
             else command.AddInParameter("@id", auditLog.ID);
@@ -96,7 +96,7 @@ namespace Civic.Core.Audit
             else command.AddInParameter("@after", JsonConvert.SerializeObject(auditLog.After));
         }
 
-        private static bool populateSystemEntityLog(AuditLog auditLog, IDataReader dataReader)
+        private static bool populateAuditAuditLog(AuditLog auditLog, IDataReader dataReader)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
@@ -124,7 +124,7 @@ namespace Civic.Core.Audit
             return true;
         }
 
-        public static void MarkSystemEntityLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
+        public static void MarkAuditAuditLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
