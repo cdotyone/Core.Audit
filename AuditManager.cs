@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civic.Core.Audit.Configuration;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,13 +11,6 @@ namespace Civic.Core.Audit
 {
     public static class AuditManager
     {
-        private static IAuditLogger _current;
-
-        public static IAuditLogger Current
-        { 
-            get { return _current ?? (_current = new AuditLogger()); }
-        }
-
         public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from, T to)
         {
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "MOD", from, to);
@@ -78,6 +72,26 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ACC", from, null);
         }
 
+        public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, T to, string trackingID)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "MOD", from, to, trackingID);
+        }
+
+        public static string LogRemove<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, string trackingID)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "DEL", from, null, trackingID);
+        }
+
+        public static string LogAdd<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, string trackingID)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ADD", null, from, trackingID);
+        }
+
+        public static string LogAccess<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, string trackingID)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ACC", from, null, trackingID);
+        }
+
 
         public static bool HasChanged(object before, object after)
         {
@@ -113,11 +127,12 @@ namespace Civic.Core.Audit
             return false;
         }
 
-        public static string LogChange(string who, string clientMachine, string module, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after)
+        public static string LogChange(string who, string clientMachine, string module, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, object before, object after, string trackingID = null)
         {
             try
             {
-                var logger = Current;
+                if (string.IsNullOrEmpty(trackingID)) trackingID = Guid.NewGuid().ToString();
+
                 string jsonBefore = null;
                 string jsonAfter = null;
                 var dictBefore = new Dictionary<string, string>();
@@ -210,9 +225,17 @@ namespace Civic.Core.Audit
 
                 if (!when.HasValue || when.Value == DateTime.MinValue || when.Value == DateTime.MaxValue || (DateTime.UtcNow-when.Value).TotalSeconds>5) when = DateTime.UtcNow;
 
-                if (when.HasValue && when.Value.Kind == DateTimeKind.Utc && AuditConfig.Current.UseLocalTime)
-                    when = when.Value.ToLocalTime();
-                return logger.LogChange(who, when.Value, clientMachine, module, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
+                var providers = AuditConfig.Current.GetProvidersByModule(module);
+                foreach (var provider in providers)
+                {
+                    var pwhen = when;
+                    var config = provider.Configuration as AuditProviderElement;
+
+                    if (config != null && (pwhen.HasValue && pwhen.Value.Kind == DateTimeKind.Utc && config.UseLocalTime))
+                        pwhen = when.Value.ToLocalTime();
+
+                    return provider.LogChange(trackingID, module, who, pwhen.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
+                }
             }
             catch (Exception ex)
             {
@@ -223,12 +246,15 @@ namespace Civic.Core.Audit
             return null;
         }
 
-        public static void MarkSuccessFul(string module, string id, string enityKey)
+        public static void MarkSuccessFul(string module, string trackingID, string enityKey)
         {
             try
             {
-                var logger = Current;
-                logger.MarkSuccessFul(module, id, enityKey);
+                var providers = AuditConfig.Current.GetProvidersByModule(module);
+                foreach (var provider in providers)
+                {
+                    provider.MarkSuccessFul(trackingID, module, enityKey);
+                }
             }
             catch (Exception ex)
             {
@@ -237,18 +263,9 @@ namespace Civic.Core.Audit
             }
         }
 
-        public static void MarkSuccessFul(string module, IEnumerable<string> ids)
+        public static void MarkSuccessFul(string module, string trackingID)
         {
-            try
-            {
-                var logger = Current;
-                logger.MarkSuccessFul(module, ids);
-            }
-            catch (Exception ex)
-            {
-                if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex))
-                    throw;
-            }
+            MarkSuccessFul(module, trackingID, null);
         }
     }
 }

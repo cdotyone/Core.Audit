@@ -68,12 +68,14 @@
     <Compile Include="..\..\References\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="AuditLogger.cs" />
+    <Compile Include="Providers\SqlAuditProvider.cs" />
     <Compile Include="AuditManager.cs" />
     <Compile Include="AuditData.cs" />
-    <Compile Include="AuditConfig.cs" />
-    <Compile Include="SystemEntityLog.cs" />
-    <Compile Include="IAuditLogger.cs" />
+    <Compile Include="Configuration\AuditConfig.cs" />
+    <Compile Include="Configuration\AuditProviderElement.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="AuditLog.cs" />
+    <Compile Include="IAuditProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

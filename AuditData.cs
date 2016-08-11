@@ -11,10 +11,10 @@ namespace Civic.Core.Audit
     public class AuditData
     {
 
-        public static SystemEntityLog GetSystemEntityLog(Int32 id, IDBConnection database)
+        public static AuditLog GetSystemEntityLog(Int32 id, IDBConnection database)
         {
             Debug.Assert(database != null);
-            var systemEntityLogReturned = new SystemEntityLog();
+            var systemEntityLogReturned = new AuditLog();
 
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
             {
@@ -32,10 +32,10 @@ namespace Civic.Core.Audit
             return systemEntityLogReturned;
         }
 
-        public static List<SystemEntityLog> GetPagedSystemEntityLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
+        public static List<AuditLog> GetPagedSystemEntityLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
             Debug.Assert(database != null);
-            var list = new List<SystemEntityLog>();
+            var list = new List<AuditLog>();
 
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGetFiltered"))
             {
@@ -47,11 +47,11 @@ namespace Civic.Core.Audit
 
                 command.ExecuteReader(dataReader =>
                 {
-                    var item = new SystemEntityLog();
+                    var item = new AuditLog();
                     while (populateSystemEntityLog(item, dataReader))
                     {
                         list.Add(item);
-                        item = new SystemEntityLog();
+                        item = new AuditLog();
                     }
                 });
 
@@ -61,83 +61,75 @@ namespace Civic.Core.Audit
             return list;
         }
 
-        public static int AddSystemEntityLog(SystemEntityLog systemEntityLog, IDBConnection database)
+        public static int AddSystemEntityLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogAdd"))
             {
-                buildSystemEntityLogCommandParameters(systemEntityLog, command, true);
+                buildSystemEntityLogCommandParameters(auditLog, command, useLocalTime, true);
                 command.ExecuteNonQuery();
                 return
-               systemEntityLog.ID = Int32.Parse(
+               auditLog.ID = Int32.Parse(
                command.GetOutParameter("@id").Value.ToString());
             }
         }
 
-        private static void buildSystemEntityLogCommandParameters(SystemEntityLog systemEntityLog, IDBCommand command, bool addRecord)
+        private static void buildSystemEntityLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
         {
-            if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, systemEntityLog.ID);
-            else command.AddInParameter("@id", systemEntityLog.ID);
-            command.AddInParameter("@entitycode", systemEntityLog.EntityCode);
-            command.AddInParameter("@entitykeys", systemEntityLog.EntityKeys);
-            command.AddInParameter("@clientMachine", systemEntityLog.ClientMachine);
-            command.AddInParameter("@relatedentitycode", systemEntityLog.RelatedEntityCode);
-            command.AddInParameter("@relatedentitykeys", systemEntityLog.RelatedEntityKeys);
-            command.AddInParameter("@action", systemEntityLog.Action);
-            if(systemEntityLog.Created.HasValue) command.AddInParameter("@created", systemEntityLog.Created);   
-            else command.AddInParameter("@created", AuditConfig.Current.UseLocalTime ? DateTime.Now : DateTime.UtcNow);
-            command.AddInParameter("@success", systemEntityLog.Success ? "Y" : "N");
-            command.AddInParameter("@createdBy", systemEntityLog.CreatedBy);
+            if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, auditLog.ID);
+            else command.AddInParameter("@id", auditLog.ID);
+            command.AddInParameter("@trackingUID", auditLog.TrackingUID);
+            command.AddInParameter("@entitycode", auditLog.EntityCode);
+            command.AddInParameter("@entitykeys", auditLog.EntityKeys);
+            command.AddInParameter("@clientMachine", auditLog.ClientMachine);
+            command.AddInParameter("@relatedentitycode", auditLog.RelatedEntityCode);
+            command.AddInParameter("@relatedentitykeys", auditLog.RelatedEntityKeys);
+            command.AddInParameter("@action", auditLog.Action);
+            if(auditLog.Created.HasValue) command.AddInParameter("@created", auditLog.Created);   
+            else command.AddInParameter("@created", useLocalTime ? DateTime.Now : DateTime.UtcNow);
+            command.AddInParameter("@success", auditLog.Success ? "Y" : "N");
+            command.AddInParameter("@createdBy", auditLog.CreatedBy);
 
-            if (systemEntityLog.Before == null || systemEntityLog.Before.Count == 0) command.AddInParameter("@before", null);
-            else command.AddInParameter("@before", JsonConvert.SerializeObject(systemEntityLog.Before));
-            if (systemEntityLog.After == null || systemEntityLog.After.Count == 0) command.AddInParameter("@after", null);
-            else command.AddInParameter("@after", JsonConvert.SerializeObject(systemEntityLog.After));
+            if (auditLog.Before == null || auditLog.Before.Count == 0) command.AddInParameter("@before", null);
+            else command.AddInParameter("@before", JsonConvert.SerializeObject(auditLog.Before));
+            if (auditLog.After == null || auditLog.After.Count == 0) command.AddInParameter("@after", null);
+            else command.AddInParameter("@after", JsonConvert.SerializeObject(auditLog.After));
         }
 
-        private static bool populateSystemEntityLog(SystemEntityLog systemEntityLog, IDataReader dataReader)
+        private static bool populateSystemEntityLog(AuditLog auditLog, IDataReader dataReader)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
-            systemEntityLog.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;
-            systemEntityLog.EntityCode = dataReader["EntityCode"] != null && !string.IsNullOrEmpty(dataReader["EntityCode"].ToString()) ? dataReader["EntityCode"].ToString() : string.Empty;
-            systemEntityLog.EntityKeys = dataReader["EntityKeys"] != null && !string.IsNullOrEmpty(dataReader["EntityKeys"].ToString()) ? dataReader["EntityKeys"].ToString() : string.Empty;
-            systemEntityLog.RelatedEntityCode = dataReader["RelatedEntityCode"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityCode"].ToString()) ? dataReader["RelatedEntityCode"].ToString() : string.Empty;
-            systemEntityLog.RelatedEntityKeys = dataReader["RelatedEntityKeys"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityKeys"].ToString()) ? dataReader["RelatedEntityKeys"].ToString() : string.Empty;
-            systemEntityLog.Action = dataReader["Action"] != null && !string.IsNullOrEmpty(dataReader["Action"].ToString()) ? dataReader["Action"].ToString() : string.Empty;
-            systemEntityLog.ClientMachine = dataReader["ClientMachine"] != null && !string.IsNullOrEmpty(dataReader["ClientMachine"].ToString()) ? dataReader["ClientMachine"].ToString() : string.Empty;
+            auditLog.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;
+            auditLog.TrackingUID = dataReader["TrackingUID"] != null && !string.IsNullOrEmpty(dataReader["TrackingUID"].ToString()) ? dataReader["TrackingUID"].ToString() : string.Empty;
+            auditLog.EntityCode = dataReader["EntityCode"] != null && !string.IsNullOrEmpty(dataReader["EntityCode"].ToString()) ? dataReader["EntityCode"].ToString() : string.Empty;
+            auditLog.EntityKeys = dataReader["EntityKeys"] != null && !string.IsNullOrEmpty(dataReader["EntityKeys"].ToString()) ? dataReader["EntityKeys"].ToString() : string.Empty;
+            auditLog.RelatedEntityCode = dataReader["RelatedEntityCode"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityCode"].ToString()) ? dataReader["RelatedEntityCode"].ToString() : string.Empty;
+            auditLog.RelatedEntityKeys = dataReader["RelatedEntityKeys"] != null && !string.IsNullOrEmpty(dataReader["RelatedEntityKeys"].ToString()) ? dataReader["RelatedEntityKeys"].ToString() : string.Empty;
+            auditLog.Action = dataReader["Action"] != null && !string.IsNullOrEmpty(dataReader["Action"].ToString()) ? dataReader["Action"].ToString() : string.Empty;
+            auditLog.ClientMachine = dataReader["ClientMachine"] != null && !string.IsNullOrEmpty(dataReader["ClientMachine"].ToString()) ? dataReader["ClientMachine"].ToString() : string.Empty;
             
             string before = dataReader["Before"] != null && !string.IsNullOrEmpty(dataReader["Before"].ToString()) ? dataReader["Before"].ToString() : string.Empty;
             string after = dataReader["After"] != null && !string.IsNullOrEmpty(dataReader["After"].ToString()) ? dataReader["After"].ToString() : string.Empty;
 
             var format = new CultureInfo("en-US").DateTimeFormat;
-            systemEntityLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
-            if (!(dataReader["Created"] is DBNull)) systemEntityLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeLocal);
-            if (!(dataReader["Recorded"] is DBNull)) systemEntityLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeLocal);
-            systemEntityLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
+            auditLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
+            if (!(dataReader["Created"] is DBNull)) auditLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeLocal);
+            if (!(dataReader["Recorded"] is DBNull)) auditLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeLocal);
+            auditLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
 
-            if (!string.IsNullOrEmpty(before)) systemEntityLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
-            if (!string.IsNullOrEmpty(after)) systemEntityLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(after);
+            if (!string.IsNullOrEmpty(before)) auditLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
+            if (!string.IsNullOrEmpty(after)) auditLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(after);
 
             return true;
         }
 
-        public static void MarkSystemEntityLogSuccessFul(IEnumerable<string> ids, IDBConnection database)
-        {
-            Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessful"))
-            {
-                command.AddInParameter("@ids", string.Join(",", ids));
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public static void MarkSystemEntityLogSuccessFul(string id, string enityKey, IDBConnection database)
+        public static void MarkSystemEntityLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
             {
-                command.AddInParameter("@id", id);
+                command.AddInParameter("@trackingUID", trackingUID);
                 command.AddInParameter("@enityKey", enityKey);
                 command.ExecuteNonQuery();
             }

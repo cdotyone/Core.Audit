@@ -3,11 +3,14 @@ using System.Runtime.Serialization;
 
 namespace Civic.Core.Audit
 {
-    [DataContract(Name = "systemEntityLog")]
-    public class SystemEntityLog
+    [DataContract(Name = "auditLog")]
+    public class AuditLog
     {
         [DataMember(Name = "id")]
         public int ID { get; set; }
+
+        [DataMember(Name = "trackingUID")]
+        public string TrackingUID { get; set; }
 
         [DataMember(Name = "entityCode")]
         public string EntityCode { get; set; }
