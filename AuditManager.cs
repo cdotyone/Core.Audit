@@ -234,7 +234,7 @@ namespace Civic.Core.Audit
                     if (config != null && (pwhen.HasValue && pwhen.Value.Kind == DateTimeKind.Utc && config.UseLocalTime))
                         pwhen = when.Value.ToLocalTime();
 
-                    return provider.LogChange(trackingID, module, who, pwhen.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
+                    return provider.LogChange( module, trackingID, who, pwhen.Value, clientMachine, schema, entityCode, entityKeys, relatedEntityCode, relatedEntityKeys, action, dictBefore, dictAfter);
                 }
             }
             catch (Exception ex)
@@ -253,7 +253,7 @@ namespace Civic.Core.Audit
                 var providers = AuditConfig.Current.GetProvidersByModule(module);
                 foreach (var provider in providers)
                 {
-                    provider.MarkSuccessFul(trackingID, module, enityKey);
+                    provider.MarkSuccessFul(module, trackingID, enityKey);
                 }
             }
             catch (Exception ex)
