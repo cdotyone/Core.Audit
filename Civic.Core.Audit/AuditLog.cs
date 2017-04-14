@@ -9,6 +9,9 @@ namespace Civic.Core.Audit
         [DataMember(Name = "id")]
         public int ID { get; set; }
 
+        [DataMember(Name = "moduleCode")]
+        public string ModuleCode { get; set; }
+
         [DataMember(Name = "trackingUID")]
         public string TrackingUID { get; set; }
 
@@ -38,6 +41,9 @@ namespace Civic.Core.Audit
 
         [DataMember(Name = "created")]
         public System.DateTime? Created { get; set; }
+
+        [DataMember(Name = "processed")]
+        public System.DateTime? Processed { get; set; }
 
         [DataMember(Name = "recorded")]
         public System.DateTime Recorded { get; set; }
