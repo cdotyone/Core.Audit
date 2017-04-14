@@ -21,6 +21,7 @@ namespace Civic.Core.Audit.Providers
             var log = new AuditLog
                 {
                     TrackingUID = trackingID,
+                    ModuleCode = module,
                     EntityCode = schema + "_" + entityCode,
                     EntityKeys = entityKeys,
                     RelatedEntityCode = relatedEntityCode,
