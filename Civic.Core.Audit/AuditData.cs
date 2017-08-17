@@ -88,6 +88,7 @@ namespace Civic.Core.Audit
             if(auditLog.Created.HasValue) command.AddInParameter("@created", auditLog.Created);   
             else command.AddInParameter("@created", useLocalTime ? DateTime.Now : DateTime.UtcNow);
             command.AddInParameter("@success", auditLog.Success ? "Y" : "N");
+            command.AddInParameter("@processed", auditLog.Processed);
             command.AddInParameter("@createdBy", auditLog.CreatedBy);
 
             if (auditLog.Before == null || auditLog.Before.Count == 0) command.AddInParameter("@before", null);
