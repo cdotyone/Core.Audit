@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using Civic.Core.Data;
+using Civic.Core.Logging;
 using Newtonsoft.Json;
 
 namespace Civic.Core.Audit
@@ -119,8 +120,24 @@ namespace Civic.Core.Audit
             if (!(dataReader["Recorded"] is DBNull)) auditLog.Recorded = DateTime.Parse(dataReader["Recorded"].ToString(), format, DateTimeStyles.AssumeLocal);
             auditLog.CreatedBy = dataReader["CreatedBy"] != null && !string.IsNullOrEmpty(dataReader["CreatedBy"].ToString()) ? dataReader["CreatedBy"].ToString() : string.Empty;
 
-            if (!string.IsNullOrEmpty(before)) auditLog.Before = JsonConvert.DeserializeObject<Dictionary<string,string>>(before);
-            if (!string.IsNullOrEmpty(after)) auditLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(after);
+            try
+            {
+                if (dataReader["Before"] != null)
+                    auditLog.Before = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataReader["Before"].ToString());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.entitycode={0} , Audit.entitycode={1} : Failed to parse before json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["Before"].ToString());
+            }
+            try
+            {
+                if (dataReader["After"] != null)
+                    auditLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataReader["After"].ToString());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.entitycode={0} , Audit.entitycode={1} : Failed to parse after json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["After"].ToString());
+            }
 
             return true;
         }
