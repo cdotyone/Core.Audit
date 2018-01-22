@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Civic.Core.Audit.Providers;
 using Civic.Core.Configuration;
 
@@ -11,6 +12,7 @@ namespace Civic.Core.Audit.Configuration
         private static CivicSection _coreConfig;
         private static AuditConfig _current;
         private string _default;
+        private static Object lockMe = new Object();
 
         public AuditConfig(INamedElement element)
         {
@@ -62,20 +64,22 @@ namespace Civic.Core.Audit.Configuration
             get
             {
                 if (_providers != null) return _providers;
-                if (Children.Count == 0)
+                lock (lockMe)
                 {
-                    Children.Add("SqlCacheProvider",
-                        new AuditProviderElement(new SqlAuditProvider(),
+                    if (Children.Count == 0)
+                    {
+                        Children["SqlCacheProvider"] = new AuditProviderElement(new SqlAuditProvider(),
                             new NamedConfigurationElement()
                             {
-                                Attributes = new Dictionary<string, string> { { "connectionStringName", "CIVIC" } }
-                            }));
-                }
+                                Attributes = new Dictionary<string, string> {{"connectionStringName", "CIVIC"}}
+                            });
+                    }
 
-                _providers = new Dictionary<string, AuditProviderElement>();
-                foreach (var element in Children)
-                {
-                    _providers[element.Key.ToLowerInvariant()] = new AuditProviderElement(element.Value);
+                    _providers = new Dictionary<string, AuditProviderElement>();
+                    foreach (var element in Children)
+                    {
+                        _providers[element.Key.ToLowerInvariant()] = new AuditProviderElement(element.Value);
+                    }
                 }
 
                 return _providers;
