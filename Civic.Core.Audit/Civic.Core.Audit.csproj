@@ -61,7 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Civic.Core.Configuration" Version="1.24.881" />
-    <PackageReference Include="Civic.Core.Data" Version="1.24.883" />
+    <PackageReference Include="Civic.Core.Data" Version="1.24.888" />
     <PackageReference Include="Civic.Core.Logging" Version="1.26.882" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.6.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
