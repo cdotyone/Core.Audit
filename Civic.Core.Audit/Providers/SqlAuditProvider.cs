@@ -43,11 +43,11 @@ namespace Civic.Core.Audit.Providers
             return log.ID.ToString(CultureInfo.InvariantCulture);
         }
 
-        public void MarkSuccessFul(string module, string trackingID, string enityKey)
+        public void MarkSuccessFul(string module, string trackingID, string entityKey)
         {
             using (var database = DatabaseFactory.CreateDatabase(module))
             {
-                AuditData.MarkAuditLogSuccessFul(trackingID, enityKey, database);
+                AuditData.MarkAuditLogSuccessFul(trackingID, entityKey, database);
             }
         }
     }

@@ -13,6 +13,6 @@ namespace Civic.Core.Audit
 
         string LogChange(string module, string trackingID, string who, DateTime when, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after);
 
-        void MarkSuccessFul(string module, string trackingID, string enityKey);
+        void MarkSuccessFul(string module, string trackingID, string entityKey);
     }
 }

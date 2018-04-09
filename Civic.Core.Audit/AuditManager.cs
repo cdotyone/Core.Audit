@@ -246,14 +246,14 @@ namespace Civic.Core.Audit
             return null;
         }
 
-        public static void MarkSuccessFul(string module, string trackingID, string enityKey)
+        public static void MarkSuccessFul(string module, string trackingID, string entityKey)
         {
             try
             {
                 var providers = AuditConfig.Current.GetProvidersByModule(module);
                 foreach (var provider in providers)
                 {
-                    provider.MarkSuccessFul(module, trackingID, enityKey);
+                    provider.MarkSuccessFul(module, trackingID, entityKey);
                 }
             }
             catch (Exception ex)

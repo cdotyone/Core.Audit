@@ -142,13 +142,13 @@ namespace Civic.Core.Audit
             return true;
         }
 
-        public static void MarkAuditLogSuccessFul(string trackingUID, string enityKey, IDBConnection database)
+        public static void MarkAuditLogSuccessFul(string trackingUID, string entityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
             {
                 command.AddInParameter("@trackingUID", trackingUID);
-                command.AddInParameter("@enityKey", enityKey);
+                command.AddInParameter("@entityKey", entityKey);
                 command.ExecuteNonQuery();
             }
         }
