@@ -40,7 +40,7 @@ namespace Civic.Core.Audit.Providers
                 AuditData.AddAuditLog(log, database, config.UseLocalTime);
             }
 
-            return log.ID.ToString(CultureInfo.InvariantCulture);
+            return log.TrackingUID;
         }
 
         public void MarkSuccessFul(string module, string trackingID, string entityKey)
