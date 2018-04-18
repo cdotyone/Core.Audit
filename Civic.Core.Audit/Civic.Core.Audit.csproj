@@ -60,11 +60,11 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Configuration" Version="1.25.1227" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.25.1543" />
     <PackageReference Include="Civic.Core.Data" Version="1.25.1256" />
     <PackageReference Include="Civic.Core.Logging" Version="1.26.1235" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
