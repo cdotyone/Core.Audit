@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{99000CB6
 		.gitignore = .gitignore
 		.gitlab-ci.yml = .gitlab-ci.yml
 		Nuget\Civic.Core.Audit.nuspec = Nuget\Civic.Core.Audit.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

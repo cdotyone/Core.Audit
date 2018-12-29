@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Civic.Core.Audit.Providers;
 using Civic.Core.Configuration;
@@ -7,12 +8,11 @@ namespace Civic.Core.Audit.Configuration
 {
     public class AuditConfig : NamedConfigurationElement
     {
-        protected const string DEFAULT_CONNECTION_STRING = "default";
         protected const string USE_LOCAL_TIME = "useLocalTime";
         private static CivicSection _coreConfig;
         private static AuditConfig _current;
         private string _default;
-        private static Object lockMe = new Object();
+        private bool _useLocalTime;
 
         public AuditConfig(INamedElement element)
         {
@@ -20,8 +20,7 @@ namespace Civic.Core.Audit.Configuration
             Children = element.Children;
             Attributes = element.Attributes;
             Name = element.Name;
-
-            if (Attributes.ContainsKey(DEFAULT_CONNECTION_STRING)) _default = Attributes[DEFAULT_CONNECTION_STRING];
+            _useLocalTime = Attributes.ContainsKey(USE_LOCAL_TIME) || bool.Parse(Attributes[USE_LOCAL_TIME]);
         }
 
         /// <summary>
@@ -56,42 +55,41 @@ namespace Civic.Core.Audit.Configuration
             set { _default = value; Attributes[Constants.CONFIG_PROP_DEFAULTPROVIDER] = value; }
         }
 
+        public bool UseLocalTime
+        {
+            get { return _useLocalTime; }
+            set { _useLocalTime = value; Attributes[USE_LOCAL_TIME] = value.ToString(); }
+        }
+
         /// <summary>
         /// Gets the collection cache providers
         /// </summary>
-        public Dictionary<string, AuditProviderElement> Providers
+        public ConcurrentDictionary<string, AuditProviderElement> Providers
         {
             get
             {
                 if (_providers != null) return _providers;
-                lock (lockMe)
+                if (Children.Count == 0)
                 {
-                    if (Children.Count == 0)
-                    {
-                        Children["SqlCacheProvider"] = new AuditProviderElement(new SqlAuditProvider(),
-                            new NamedConfigurationElement()
-                            {
-                                Attributes = new Dictionary<string, string> {{"connectionStringName", "CIVIC"}}
-                            });
-                    }
+                    Children["SqlAuditProvider"] = new AuditProviderElement(new SqlAuditProvider());
+                }
 
-                    _providers = new Dictionary<string, AuditProviderElement>();
-                    foreach (var element in Children)
-                    {
-                        _providers[element.Key.ToLowerInvariant()] = new AuditProviderElement(element.Value);
-                    }
+                _providers = new ConcurrentDictionary<string, AuditProviderElement>();
+                foreach (var element in Children)
+                {
+                    _providers[element.Key.ToLowerInvariant()] = new AuditProviderElement(element.Value, this);
                 }
 
                 return _providers;
             }
         }
-        private Dictionary<string, AuditProviderElement> _providers;
+        private ConcurrentDictionary<string, AuditProviderElement> _providers;
 
         /// <summary>
-        /// Gets a list of providers that should recieve audit messages
+        /// Gets a list of providers that should receive audit messages
         /// </summary>
-        /// <param name="moduleName">The name of the module that is to recieve the audit messages</param>
-        /// <returns>the lsit of providers</returns>
+        /// <param name="moduleName">The name of the module that is to receive the audit messages</param>
+        /// <returns>the list of providers</returns>
         public List<IAuditProvider> GetProvidersByModule(string moduleName)
         {
             moduleName = moduleName.ToUpperInvariant();
