@@ -84,15 +84,15 @@ namespace Civic.Core.Audit.Configuration
         /// <summary>
         /// Default constructor
         /// </summary>
-        public AuditProviderElement(INamedElement config)
+        public AuditProviderElement(INamedElement config, AuditConfig auditConfig)
 		{
 		    Attributes = config.Attributes;
 		    Children = config.Children;
 
-            _assembly = Attributes[Constants.ASSEMBLY];
+		    _assembly = Attributes[Constants.ASSEMBLY];
             _typeName = Attributes[Constants.TYPE];
             _modules = Attributes.ContainsKey(Constants.MODULES) ? new List<string>(Attributes[Constants.MODULES].ToUpperInvariant().Split(',')) : new List<string>();
-            _useLocalTime = !Attributes.ContainsKey(USE_LOCAL_TIME) || bool.Parse(Attributes[USE_LOCAL_TIME]);
+            _useLocalTime = Attributes.ContainsKey(USE_LOCAL_TIME) ? bool.Parse(Attributes[USE_LOCAL_TIME]) : auditConfig.UseLocalTime;
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Civic.Core.Audit.Configuration;
 using Civic.Core.Configuration;
 using Civic.Core.Data;
@@ -9,11 +8,10 @@ namespace Civic.Core.Audit.Providers
 {
     public class SqlAuditProvider : IAuditProvider
     {
-        /// <summary>
-        /// The configuration for this provider
-        /// </summary>
+        /// <inheritdoc />
         public INamedElement Configuration { get; set; }
 
+        /// <inheritdoc />
         public string LogChange(string module, string trackingID, string who, DateTime when, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after)
         {
             var config = Configuration as AuditProviderElement;
@@ -35,14 +33,20 @@ namespace Civic.Core.Audit.Providers
                     CreatedBy = who
                 };
 
-            using (var database = DatabaseFactory.CreateDatabase(module))
+            var connection = config!=null && config.Attributes.ContainsKey(Constants.CONFIG_DEFAULTPROVIDER) ? config.Attributes[Constants.CONFIG_DEFAULTPROVIDER] : module;
+
+            if (config != null && config.Children.ContainsKey(module))
+                connection = config.Children[module].Attributes["to"];
+
+            using (var database = DatabaseFactory.CreateDatabase(connection))
             {
-                AuditData.AddAuditLog(log, database, config.UseLocalTime);
+                AuditData.AddAuditLog(log, database, config!=null && config.UseLocalTime);
             }
 
             return log.TrackingUID;
         }
 
+        /// <inheritdoc />
         public void MarkSuccessFul(string module, string trackingID, string entityKey)
         {
             using (var database = DatabaseFactory.CreateDatabase(module))
