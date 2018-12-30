@@ -31,6 +31,11 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "ACC", from, null);
         }
 
+        public static string LogAccessFailure<T>(string who, string clientMachine, string module, string schema, string entityKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, null, null, "DENY", from, null);
+        }
+
         public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from, T to)
         {
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "MOD", from, to);
@@ -49,6 +54,11 @@ namespace Civic.Core.Audit
         public static string LogAccess<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
         {
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "ACC", from, null);
+        }
+
+        public static string LogAccessFailure<T>(string who, string clientMachine, string module, string schema, string entityKeys, Type relatedType, string relatedKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedType.Name, relatedKeys, "DENY", from, null);
         }
 
 
@@ -72,6 +82,11 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ACC", from, null);
         }
 
+        public static string LogAccessFailure<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "DENY", from, null);
+        }
+
         public static string LogModify<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, T to, string trackingID)
         {
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "MOD", from, to, trackingID);
@@ -92,6 +107,10 @@ namespace Civic.Core.Audit
             return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "ACC", from, null, trackingID);
         }
 
+        public static string LogAccessFailure<T>(string who, string clientMachine, string module, string schema, string entityKeys, string relatedEntityCode, string relatedKeys, T from, string trackingID)
+        {
+            return LogChange(who, clientMachine, module, schema, typeof(T).Name, entityKeys, relatedEntityCode, relatedKeys, "DENY", from, null, trackingID);
+        }
 
         public static bool HasChanged(object before, object after)
         {
