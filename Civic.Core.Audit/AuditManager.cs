@@ -129,7 +129,7 @@ namespace Civic.Core.Audit
         {
             try
             {
-                if (string.IsNullOrEmpty(trackingID)) trackingID = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(trackingID)) trackingID = Guid.NewGuid().ToString().Replace("-","");
 
                 string jsonBefore = null;
                 string jsonAfter = null;

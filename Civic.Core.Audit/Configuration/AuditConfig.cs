@@ -16,11 +16,11 @@ namespace Civic.Core.Audit.Configuration
 
         public AuditConfig(INamedElement element)
         {
-            if (element == null) element = new NamedConfigurationElement() {Name = SectionName };
+            if (element == null) element = new NamedConfigurationElement() { Name = SectionName };
             Children = element.Children;
             Attributes = element.Attributes;
-            Name = element.Name;
-            _useLocalTime = Attributes.ContainsKey(USE_LOCAL_TIME) || bool.Parse(Attributes[USE_LOCAL_TIME]);
+            //Name = element.Name;
+            _useLocalTime = Attributes.ContainsKey(USE_LOCAL_TIME) && bool.Parse(Attributes[USE_LOCAL_TIME]);
         }
 
         /// <summary>
