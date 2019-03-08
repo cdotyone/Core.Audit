@@ -1,6 +1,6 @@
 using System.Reflection;
 
 [assembly: AssemblyVersion("1.26.0.0")]
-[assembly: AssemblyFileVersion("1.26.8.5448")]
+[assembly: AssemblyFileVersion("1.26.9.6709")]
 [assembly: AssemblyCompany("Civic Engineering & IT")]
 [assembly: AssemblyCopyright("Copyright © 2019 Civic Engineering & IT")]
