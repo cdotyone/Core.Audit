@@ -74,9 +74,9 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Configuration" Version="1.26.9" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.26.10" />
     <PackageReference Include="Civic.Core.Data" Version="1.27.5" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.27.12" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.27.15" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.10.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
