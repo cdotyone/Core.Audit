@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Civic.Core.Audit")]
+[assembly: AssemblyTitle("Core.Audit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Civic.Core.Audit")]
+[assembly: AssemblyProduct("Core.Audit")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

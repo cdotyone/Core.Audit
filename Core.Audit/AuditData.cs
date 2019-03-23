@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
-using Civic.Core.Data;
-using Civic.Core.Logging;
+using Core.Data;
+using Core.Logging;
 using Newtonsoft.Json;
 
-namespace Civic.Core.Audit
+namespace Core.Audit
 {
     public class AuditData
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Civic.Core.Audit
+namespace Core.Audit
 {
     [DataContract(Name = "auditLog")]
     public class AuditLog

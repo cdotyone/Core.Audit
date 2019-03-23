@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Civic.Core.Configuration;
+using Core.Configuration;
 
-namespace Civic.Core.Audit
+namespace Core.Audit
 {
     public interface IAuditProvider
     {
