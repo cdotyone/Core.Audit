@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Civic.Core.Audit.Configuration;
-using Civic.Core.Configuration;
-using Civic.Core.Data;
+using Core.Audit.Configuration;
+using Core.Configuration;
+using Core.Data;
 
-namespace Civic.Core.Audit.Providers
+namespace Core.Audit.Providers
 {
     public class SqlAuditProvider : IAuditProvider
     {

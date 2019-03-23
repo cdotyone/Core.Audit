@@ -5,7 +5,7 @@ Core.Audit
 
 Automatically builds when committed to gitlab.
 
-Creates nuget package Civic.Core.Audit available from nexus.civic360.com
+Creates nuget package Core.Audit available from nexus.civic360.com
 
 By default the providers log in UTC time unless useLocalTime is set to true.
 
@@ -15,7 +15,7 @@ By default the providers log in UTC time unless useLocalTime is set to true.
 <civic>
 	<audit default="SqlAuditProvider" useLocalTime="false">
 		<providers>
-			<add name="SqlAuditProvider" type="Civic.Core.Audit.Providers.SqlAuditProvider" assembly="Civic.Core.Audit"/>
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit"/>
 		</providers>
 	</audit>
 </civic>
@@ -31,7 +31,7 @@ Below the audit entries are from the "land" are redirected to the "civic" databa
 <civic>
 	<audit default="SqlAuditProvider">
 		<providers>
-			<add name="SqlAuditProvider" type="Civic.Core.Audit.Providers.SqlAuditProvider" assembly="Civic.Core.Audit">
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit">
 				<add name="land" to="civic"/>
 			</add>
 		</providers>
@@ -49,7 +49,7 @@ This can also be used in conjunction with Module Specific Remapping.
 <civic>
 	<audit default="SqlAuditProvider">
 		<providers>
-			<add name="SqlAuditProvider" type="Civic.Core.Audit.Providers.SqlAuditProvider" assembly="Civic.Core.Audit" default="civic"/>
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit" default="civic"/>
 		</providers>
 	</audit>
 </civic>

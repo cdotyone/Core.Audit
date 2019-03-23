@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Civic.Core.Audit.Configuration;
-using Civic.Core.Logging;
+using Core.Audit.Configuration;
+using Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Civic.Core.Audit
+namespace Core.Audit
 {
     public static class AuditManager
     {

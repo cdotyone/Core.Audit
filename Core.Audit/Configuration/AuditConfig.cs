@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Civic.Core.Audit.Providers;
-using Civic.Core.Configuration;
+using Core.Audit.Providers;
+using Core.Configuration;
 
-namespace Civic.Core.Audit.Configuration
+namespace Core.Audit.Configuration
 {
     public class AuditConfig : NamedConfigurationElement
     {

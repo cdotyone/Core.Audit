@@ -1,4 +1,4 @@
-﻿namespace Civic.Core.Audit
+﻿namespace Core.Audit
 {
     internal class Constants
     {
