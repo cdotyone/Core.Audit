@@ -14,7 +14,7 @@
       <group>
         <dependency id="Core.Configuration" version="[2.0.8,3.0.0)" xmlns="" />
         <dependency id="Core.Logging" version="[2.0.2,3.0.0)" xmlns="" />
-        <dependency id="Core.Data" version="[2.0.2,3.0.0)" xmlns="" />
+        <dependency id="Core.Data" version="[2.0.3,3.0.0)" xmlns="" />
         <dependency id="Newtonsoft.Json" version="[12.0.1,13.0.0)" xmlns="" />
       </group>
     </dependencies>
