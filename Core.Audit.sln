@@ -7,8 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{99000CB6
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.gitlab-ci.yml = .gitlab-ci.yml
-		Nuget\Core.Audit.nuspec = Nuget\Core.Audit.nuspec
 		README.md = README.md
+		Nuget\Stack.Core.Audit.nuspec = Nuget\Stack.Core.Audit.nuspec
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Audit", "Core.Audit\Core.Audit.csproj", "{B346037B-E60B-49C2-92A8-AB9EE5AE45E8}"
