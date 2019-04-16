@@ -23,7 +23,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\Core.Audit\bin\Release\net471\Core.Audit.*" target="lib\net471" />
-    <file src="..\Core.Audit\bin\Release\netstandard2.0\Core.Audit.*" target="lib\netstandard2.0" />
+    <file src="..\Core.Audit\bin\Release\net471\Stack.Core.Audit.*" target="lib\net471" />
+    <file src="..\Core.Audit\bin\Release\netstandard2.0\Stack.Core.Audit.*" target="lib\netstandard2.0" />
   </files>
 </package>
