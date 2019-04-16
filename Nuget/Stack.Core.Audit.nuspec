@@ -14,7 +14,7 @@
       <group>
         <dependency id="Stack.Core.Configuration" version="[2.0.9,3.0.0)" xmlns="" />
         <dependency id="Stack.Core.Logging" version="[2.0.3,3.0.0)" xmlns="" />
-        <dependency id="Stack.Core.Data" version="[2.0.4,3.0.0)" xmlns="" />
+        <dependency id="Stack.Core.Data" version="[2.0.7,3.0.0)" xmlns="" />
         <dependency id="Newtonsoft.Json" version="[12.0.1,13.0.0)" xmlns="" />
       </group>
     </dependencies>
