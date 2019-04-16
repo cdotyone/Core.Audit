@@ -7,7 +7,7 @@ using Core.Data;
 using Core.Logging;
 using Newtonsoft.Json;
 
-namespace Core.Audit
+namespace Stack.Core.Audit
 {
     public class AuditData
     {

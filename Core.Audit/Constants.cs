@@ -1,4 +1,4 @@
-﻿namespace Core.Audit
+﻿namespace Stack.Core.Audit
 {
     internal class Constants
     {

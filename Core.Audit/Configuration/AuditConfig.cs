@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Core.Audit.Providers;
 using Core.Configuration;
+using Stack.Core.Audit.Providers;
 
-namespace Core.Audit.Configuration
+namespace Stack.Core.Audit.Configuration
 {
     public class AuditConfig : NamedConfigurationElement
     {

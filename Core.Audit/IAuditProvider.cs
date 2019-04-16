@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Core.Configuration;
 
-namespace Core.Audit
+namespace Stack.Core.Audit
 {
     public interface IAuditProvider
     {
