@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Configuration;
-using Core.Data;
 using Stack.Core.Audit.Configuration;
+using Stack.Core.Configuration;
+using Stack.Core.Data;
 
 namespace Stack.Core.Audit.Providers
 {

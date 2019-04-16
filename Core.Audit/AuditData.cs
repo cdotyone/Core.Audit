@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
-using Core.Data;
-using Core.Logging;
 using Newtonsoft.Json;
+using Stack.Core.Data;
+using Stack.Core.Logging;
 
 namespace Stack.Core.Audit
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Core.Configuration;
-using Core.Configuration.Framework;
+using Stack.Core.Configuration;
+using Stack.Core.Configuration.Framework;
 
 namespace Stack.Core.Audit.Configuration
 {

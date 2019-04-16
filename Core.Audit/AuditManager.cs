@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Stack.Core.Audit.Configuration;
+using Stack.Core.Logging;
 
 namespace Stack.Core.Audit
 {
