@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Core.Configuration;
 using Stack.Core.Audit.Providers;
+using Stack.Core.Configuration;
 
 namespace Stack.Core.Audit.Configuration
 {
