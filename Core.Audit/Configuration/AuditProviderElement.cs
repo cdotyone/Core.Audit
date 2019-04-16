@@ -2,7 +2,7 @@
 using Core.Configuration;
 using Core.Configuration.Framework;
 
-namespace Core.Audit.Configuration
+namespace Stack.Core.Audit.Configuration
 {
 	public class AuditProviderElement : NamedConfigurationElement
     {

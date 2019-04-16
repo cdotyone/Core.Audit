@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Audit.Configuration;
 using Core.Configuration;
 using Core.Data;
+using Stack.Core.Audit.Configuration;
 
-namespace Core.Audit.Providers
+namespace Stack.Core.Audit.Providers
 {
     public class SqlAuditProvider : IAuditProvider
     {

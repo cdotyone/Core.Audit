@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Audit.Configuration;
 using Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Stack.Core.Audit.Configuration;
 
-namespace Core.Audit
+namespace Stack.Core.Audit
 {
     public static class AuditManager
     {
