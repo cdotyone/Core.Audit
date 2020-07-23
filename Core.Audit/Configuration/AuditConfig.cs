@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Stack.Core.Audit.Providers;
-using Stack.Core.Configuration;
+using Core.Audit.Providers;
+using Core.Configuration;
 
-namespace Stack.Core.Audit.Configuration
+namespace Core.Audit.Configuration
 {
     public class AuditConfig : NamedConfigurationElement
     {
         protected const string USE_LOCAL_TIME = "useLocalTime";
-        private static CivicSection _coreConfig;
+        private static CoreSection _coreConfig;
         private static AuditConfig _current;
         private string _default;
         private bool _useLocalTime;
@@ -31,7 +31,7 @@ namespace Stack.Core.Audit.Configuration
             {
                 if (_current != null) return _current;
 
-                if (_coreConfig == null) _coreConfig = CivicSection.Current;
+                if (_coreConfig == null) _coreConfig = CoreSection.Current;
                 _current = new AuditConfig(_coreConfig.Children.ContainsKey(SectionName) ? _coreConfig.Children[SectionName] : null);
                 return _current;
             }
