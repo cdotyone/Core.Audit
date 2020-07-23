@@ -3,9 +3,9 @@ Core.Audit
 
 ##### Development
 
-Automatically builds when committed to gitlab.
+Automatically builds when committed to github.
 
-Creates nuget package Core.Audit
+Creates nuget package Codigo.Core.Audit
 
 By default the providers log in UTC time unless useLocalTime is set to true.
 
@@ -15,7 +15,7 @@ By default the providers log in UTC time unless useLocalTime is set to true.
 <core>
 	<audit default="SqlAuditProvider" useLocalTime="false">
 		<providers>
-			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit"/>
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Codigo.Core.Audit"/>
 		</providers>
 	</audit>
 </core>
@@ -31,7 +31,7 @@ Below the audit entries are from the "steve" are redirected to the "bob" databas
 <core>
 	<audit default="SqlAuditProvider">
 		<providers>
-			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit">
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Codigo.Core.Audit">
 				<add name="steve" to="bob"/>
 			</add>
 		</providers>
@@ -49,7 +49,7 @@ This can also be used in conjunction with Module Specific Remapping.
 <core>
 	<audit default="SqlAuditProvider">
 		<providers>
-			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Core.Audit" default="civic"/>
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Codigo.Core.Audit" default="civic"/>
 		</providers>
 	</audit>
 </core>
