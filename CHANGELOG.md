@@ -1,0 +1,15 @@
+## 2.0.4 (2020-07-23)
+
+
+### Bug Fixes
+
+* copyright year ([30a5637](https://github.com/cdotyone/Core.Audit/commit/30a56371e3eb65775f56c7373a5620ba6edc72f5))
+* first publish ([282e81d](https://github.com/cdotyone/Core.Audit/commit/282e81da323c7f4f7d8562c34d20f222d388470b))
+* minor bugs ([896270c](https://github.com/cdotyone/Core.Audit/commit/896270c8beb8e958a813c511f37a389c80ea7bb7))
+* preparing first public release ([1fe9867](https://github.com/cdotyone/Core.Audit/commit/1fe98674d24d4a25bc25aef95d948b2a913007ec))
+* readme ([3f8e4fb](https://github.com/cdotyone/Core.Audit/commit/3f8e4fb884ed5871dfd262e16ab6dbbb108d7a04))
+* tag ([af24993](https://github.com/cdotyone/Core.Audit/commit/af249930c27809e4732006e55e76f697b55ae57f))
+* tag ([7550ccf](https://github.com/cdotyone/Core.Audit/commit/7550ccf85bc29c1f4415e1d56116b7fcb2fcee34))
+
+
+
