@@ -49,7 +49,7 @@ This can also be used in conjunction with Module Specific Remapping.
 <core>
 	<audit default="SqlAuditProvider">
 		<providers>
-			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Codigo.Core.Audit" default="civic"/>
+			<add name="SqlAuditProvider" type="Core.Audit.Providers.SqlAuditProvider" assembly="Codigo.Core.Audit" default="core"/>
 		</providers>
 	</audit>
 </core>

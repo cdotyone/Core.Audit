@@ -18,7 +18,7 @@ namespace Core.Audit
             Debug.Assert(database != null);
             var auditLogReturned = new AuditLog();
 
-            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
+            using (var command = database.CreateStoredProcCommand("core", "usp_AuditLogGet"))
             {
                 command.AddInParameter("@id", id);
                 command.ExecuteReader(dataReader =>
@@ -39,7 +39,7 @@ namespace Core.Audit
             Debug.Assert(database != null);
             var list = new List<AuditLog>();
 
-            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGetFiltered"))
+            using (var command = database.CreateStoredProcCommand("core", "usp_AuditLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retCount", retCount);
@@ -66,7 +66,7 @@ namespace Core.Audit
         public static int AddAuditLog(AuditLog auditLog, IDBConnection database, bool useLocalTime)
         {
             Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogAdd"))
+            using (var command = database.CreateStoredProcCommand("core", "usp_AuditLogAdd"))
             {
                 buildAuditLogCommandParameters(auditLog, command, useLocalTime, true);
                 command.ExecuteNonQuery();
@@ -142,7 +142,7 @@ namespace Core.Audit
         public static void MarkAuditLogSuccessFul(string trackingUID, string entityKey, IDBConnection database)
         {
             Debug.Assert(database != null);
-            using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogMarkSuccessfulAdd"))
+            using (var command = database.CreateStoredProcCommand("core", "usp_AuditLogMarkSuccessfulAdd"))
             {
                 command.AddInParameter("@trackingUID", trackingUID);
                 command.AddInParameter("@entityKey", entityKey);
