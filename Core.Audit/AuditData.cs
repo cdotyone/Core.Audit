@@ -3,34 +3,35 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
+using Core.Data;
+using Core.Logging;
 using Newtonsoft.Json;
-using Stack.Core.Data;
-using Stack.Core.Logging;
+using IDbCommand = Core.Data.IDbCommand;
 
-namespace Stack.Core.Audit
+namespace Core.Audit
 {
     public class AuditData
     {
 
-        public static AuditLog GetAuditLog(Int32 id, IDBConnection database)
+        public static AuditLog GetAuditLog(int id, IDBConnection database)
         {
             Debug.Assert(database != null);
-            var AuditLogReturned = new AuditLog();
+            var auditLogReturned = new AuditLog();
 
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGet"))
             {
                 command.AddInParameter("@id", id);
                 command.ExecuteReader(dataReader =>
                     {
-                        if (populateAuditLog(AuditLogReturned, dataReader))
+                        if (populateAuditLog(auditLogReturned, dataReader))
                         {
-                            AuditLogReturned.ID = id;
+                            auditLogReturned.ID = id;
                         }
-                        else AuditLogReturned = null;
+                        else auditLogReturned = null;
                     });
             }
 
-            return AuditLogReturned;
+            return auditLogReturned;
         }
 
         public static List<AuditLog> GetPagedAuditLog(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
@@ -41,7 +42,7 @@ namespace Stack.Core.Audit
             using (var command = database.CreateStoredProcCommand("civic", "usp_AuditLogGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
-                command.AddInParameter("@retcount", retCount);
+                command.AddInParameter("@retCount", retCount);
                 if (!string.IsNullOrEmpty(filterBy)) command.AddInParameter("@filterBy", filterBy);
                 command.AddInParameter("@orderBy", orderBy);
                 command.AddParameter("@count", ParameterDirection.InputOutput, count);
@@ -69,22 +70,21 @@ namespace Stack.Core.Audit
             {
                 buildAuditLogCommandParameters(auditLog, command, useLocalTime, true);
                 command.ExecuteNonQuery();
-                return
-               auditLog.ID = Int32.Parse(
-               command.GetOutParameter("@id").Value.ToString());
+                auditLog.ID = Int32.Parse(command.GetOutParameter("@id").Value.ToString());
+                return auditLog.ID.Value;
             }
         }
 
-        private static void buildAuditLogCommandParameters(AuditLog auditLog, IDBCommand command, bool useLocalTime, bool addRecord)
+        private static void buildAuditLogCommandParameters(AuditLog auditLog, IDbCommand command, bool useLocalTime, bool addRecord)
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, auditLog.ID);
             else command.AddInParameter("@id", auditLog.ID);
             command.AddInParameter("@trackingUID", auditLog.TrackingUID);
-            command.AddInParameter("@entitycode", auditLog.EntityCode);
-            command.AddInParameter("@entitykeys", auditLog.EntityKeys);
+            command.AddInParameter("@entityCode", auditLog.EntityCode);
+            command.AddInParameter("@entityKeys", auditLog.EntityKeys);
             command.AddInParameter("@clientMachine", auditLog.ClientMachine);
-            command.AddInParameter("@relatedentitycode", auditLog.RelatedEntityCode);
-            command.AddInParameter("@relatedentitykeys", auditLog.RelatedEntityKeys);
+            command.AddInParameter("@relatedEntityCode", auditLog.RelatedEntityCode);
+            command.AddInParameter("@relatedEntityKeys", auditLog.RelatedEntityKeys);
             command.AddInParameter("@action", auditLog.Action);
             if(auditLog.Created.HasValue) command.AddInParameter("@created", auditLog.Created);   
             else command.AddInParameter("@created", useLocalTime ? DateTime.Now : DateTime.UtcNow);
@@ -111,9 +111,6 @@ namespace Stack.Core.Audit
             auditLog.Action = dataReader["Action"] != null && !string.IsNullOrEmpty(dataReader["Action"].ToString()) ? dataReader["Action"].ToString() : string.Empty;
             auditLog.ClientMachine = dataReader["ClientMachine"] != null && !string.IsNullOrEmpty(dataReader["ClientMachine"].ToString()) ? dataReader["ClientMachine"].ToString() : string.Empty;
             
-            string before = dataReader["Before"] != null && !string.IsNullOrEmpty(dataReader["Before"].ToString()) ? dataReader["Before"].ToString() : string.Empty;
-            string after = dataReader["After"] != null && !string.IsNullOrEmpty(dataReader["After"].ToString()) ? dataReader["After"].ToString() : string.Empty;
-
             var format = new CultureInfo("en-US").DateTimeFormat;
             auditLog.Success = dataReader["Success"] != null && !(dataReader["Success"] is DBNull) && dataReader["Success"].ToString()=="Y";
             if (!(dataReader["Created"] is DBNull)) auditLog.Created = DateTime.Parse(dataReader["Created"].ToString(), format, DateTimeStyles.AssumeLocal);
@@ -125,18 +122,18 @@ namespace Stack.Core.Audit
                 if (dataReader["Before"] != null)
                     auditLog.Before = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataReader["Before"].ToString());
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.entitycode={0} , Audit.entitycode={1} : Failed to parse before json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["Before"].ToString());
+                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.EntityCode={0} , Audit.EntityCode={1} : Failed to parse before json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["Before"].ToString());
             }
             try
             {
                 if (dataReader["After"] != null)
                     auditLog.After = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataReader["After"].ToString());
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.entitycode={0} , Audit.entitycode={1} : Failed to parse after json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["After"].ToString());
+                Logger.LogError(LoggingBoundaries.DataLayer, "Audit.EntityCode={0} , Audit.EntityCode={1} : Failed to parse after json: {2}", auditLog.EntityCode, auditLog.EntityKeys, dataReader["After"].ToString());
             }
 
             return true;

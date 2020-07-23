@@ -1,17 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{99000CB6-D016-4445-AD7C-08AB96601030}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{99000CB6-D016-4445-AD7C-08AB96601030}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		.gitlab-ci.yml = .gitlab-ci.yml
+		CHANGELOG.md = CHANGELOG.md
+		commitlint.config.js = commitlint.config.js
+		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
+		LICENSE = LICENSE
+		package.json = package.json
 		README.md = README.md
-		Nuget\Stack.Core.Audit.nuspec = Nuget\Stack.Core.Audit.nuspec
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Audit", "Core.Audit\Stack.Core.Audit.csproj", "{B346037B-E60B-49C2-92A8-AB9EE5AE45E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codigo.Core.Audit", "Core.Audit\Codigo.Core.Audit.csproj", "{B346037B-E60B-49C2-92A8-AB9EE5AE45E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stack.Core.Configuration;
+using Core.Configuration;
 
-namespace Stack.Core.Audit
+namespace Core.Audit
 {
     public interface IAuditProvider
     {
@@ -11,8 +11,8 @@ namespace Stack.Core.Audit
         /// </summary>
         INamedElement Configuration { get; set; }
 
-        string LogChange(string module, string trackingID, string who, DateTime when, string clientMachine, string schema, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after);
+        string LogChange<T>(string module, string trackingID, string ouid, string who, DateTime when, string clientMachine, string entityCode, string entityKeys, string relatedEntityCode, string relatedEntityKeys, string action, Dictionary<string, string> before, Dictionary<string, string> after, T entity);
 
-        void MarkSuccessFul(string module, string trackingID, string entityKey);
+        void MarkSuccessFul<T>(string module, string trackingID, string ouid, string who, string entityKey, T entity);
     }
 }

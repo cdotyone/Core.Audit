@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Stack.Core.Configuration;
-using Stack.Core.Configuration.Framework;
+using Core.Configuration;
+using Core.Configuration.Framework;
 
-namespace Stack.Core.Audit.Configuration
+namespace Core.Audit.Configuration
 {
 	public class AuditProviderElement : NamedConfigurationElement
     {

@@ -1,13 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
-namespace Stack.Core.Audit
+namespace Core.Audit
 {
     [DataContract(Name = "auditLog")]
     public class AuditLog
     {
+        [DataMember(Name = "uid")]
+        public string UID { get; set; }
+
+        [DataMember(Name = "ouid")]
+        public string OUID { get; set; }
+
         [DataMember(Name = "id")]
-        public int ID { get; set; }
+        [JsonIgnore]
+        public int? ID { get; set; }
 
         [DataMember(Name = "moduleCode")]
         public string ModuleCode { get; set; }
@@ -31,7 +39,7 @@ namespace Stack.Core.Audit
         public string Action { get; set; }
 
         [DataMember(Name = "before")]
-        public Dictionary<string,string> Before { get; set; }
+        public Dictionary<string, string> Before { get; set; }
 
         [DataMember(Name = "after")]
         public Dictionary<string, string> After { get; set; }
@@ -55,4 +63,3 @@ namespace Stack.Core.Audit
         public string ClientMachine { get; set; }
     }
 }
-
