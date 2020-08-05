@@ -1,4 +1,13 @@
-## 2.0.4 (2020-07-23)
+## [2.0.5](https://github.com/cdotyone/Core.Audit/compare/v2.0.4...v2.0.5) (2020-08-05)
+
+
+### Bug Fixes
+
+* add ouid for audit ([09c70ec](https://github.com/cdotyone/Core.Audit/commit/09c70ecb072ad9c3c584d25f2930117a291b5b09))
+
+
+
+## [2.0.4](https://github.com/cdotyone/Core.Audit/compare/896270c8beb8e958a813c511f37a389c80ea7bb7...v2.0.4) (2020-07-23)
 
 
 ### Bug Fixes
