@@ -44,8 +44,8 @@
   <ItemGroup>
     <PackageReference Include="Codigo.Core.Configuration" Version="2.0.19" />
     <PackageReference Include="Codigo.Core.Logging" Version="2.0.7" />
-    <PackageReference Include="Codigo.Core.Data" Version="2.0.8" />
-    <PackageReference Include="Codigo.Core.Security" Version="2.0.13" />
+    <PackageReference Include="Codigo.Core.Data" Version="2.0.10" />
+    <PackageReference Include="Codigo.Core.Security" Version="2.0.14" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
