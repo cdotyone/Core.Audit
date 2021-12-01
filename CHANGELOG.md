@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/cdotyone/Core.Audit/compare/v2.0.5...v2.1.0) (2021-12-01)
+
+
+### Features
+
+* add 5.0 and 6.0 support drop 3.1 ([a0be860](https://github.com/cdotyone/Core.Audit/commit/a0be8600a32f7722bb67c05c91b3061237ba01a9))
+
+
+
 ## [2.0.5](https://github.com/cdotyone/Core.Audit/compare/v2.0.4...v2.0.5) (2020-08-05)
 
 
